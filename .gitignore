@@ -1,0 +1,21 @@
+# User data #
+#############
+media/
+
+# Compiled source #
+###################
+*.pyc
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secure files #
+################
+flamingo/flamingo/settings_secret.py
