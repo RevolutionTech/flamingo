@@ -1,5 +1,6 @@
 gunicorn==19.3.0
 Django==1.8.3
 psycopg2
+pytz==2015.4
 Pillow==2.9.0
 sorl-thumbnail==12.3
