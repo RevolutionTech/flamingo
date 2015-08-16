@@ -7,11 +7,16 @@ Django settings for flamingo project.
 
 import os
 
-import flamingo.settings_secret as secret
+if 'TRAVIS' not in os.environ:
+    import flamingo.settings_secret as secret
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOP_DIR = os.path.dirname(BASE_DIR)
-SECRET_KEY = secret.SECRET_KEY
+
+if 'TRAVIS' in os.environ:
+    SECRET_KEY = '-3f5yh&(s5%9uigtx^yn=t_woj0@90__fr!t2b*96f5xoyzb%b'
+else:
+    SECRET_KEY = secret.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -61,16 +66,28 @@ WSGI_APPLICATION = 'flamingo.wsgi.application'
 
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'flamingo',
-        'USER': secret.DATABASE_USER,
-        'PASSWORD': secret.DATABASE_PASSWORD,
-        'HOST': secret.DATABASE_HOST,
-        'PORT': secret.DATABASE_PORT,
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'flamingo',
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'flamingo',
+            'USER': secret.DATABASE_USER,
+            'PASSWORD': secret.DATABASE_PASSWORD,
+            'HOST': secret.DATABASE_HOST,
+            'PORT': secret.DATABASE_PORT,
+        }
+    }
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
