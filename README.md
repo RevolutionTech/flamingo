@@ -1,6 +1,8 @@
 # Flamingo
 ### Created by: Lucas Connors
 
+[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo)
+
 ***
 
 ## Setup
