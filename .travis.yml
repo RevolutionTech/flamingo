@@ -13,7 +13,7 @@ before_script:
 script:
   - cd flamingo
   - python manage.py migrate
-  - python manage.py test
+  - coverage run ./manage.py test
 
 after_success:
   - coveralls
