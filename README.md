@@ -1,7 +1,7 @@
 # Flamingo
 ### Created by: Lucas Connors
 
-[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo)
+[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo) [![Coverage Status](https://coveralls.io/repos/RevolutionTech/flamingo/badge.svg?branch=master&service=github)](https://coveralls.io/github/RevolutionTech/flamingo?branch=master)
 
 ***
 
@@ -27,7 +27,7 @@ In the future you can reactivate the virtual environment with:
 
 ### Installation
 
-Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), psycopg2, [pytz](http://pytz.sourceforge.net/), [pillow](https://pillow.readthedocs.org/), and [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/). You can do this simply with the command:
+Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), psycopg2, [pytz](http://pytz.sourceforge.net/), [pillow](https://pillow.readthedocs.org/), [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/), and python-coveralls. You can do this simply with the command:
 
     pip install -r requirements.txt
 

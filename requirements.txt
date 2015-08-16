@@ -4,3 +4,4 @@ psycopg2
 pytz==2015.4
 Pillow==2.9.0
 sorl-thumbnail==12.3
+python-coveralls==2.5.0

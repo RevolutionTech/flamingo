@@ -14,3 +14,6 @@ script:
   - cd flamingo
   - python manage.py migrate
   - python manage.py test
+
+after_success:
+  - coveralls
