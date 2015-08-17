@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h1 class="title">flamingo.photo</h1>
+    <form role="form" action="{% url 'login' %}{% if redirect_url %}?next={{ redirect_url }}{% endif %}" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.username.errors }}
+        <div class="row">
+            <label class="small-3 columns">Username</label>
+            <div class="small-9 columns">
+                <input type="text" name="username" placeholder="jsmith" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+            </div>
+        </div>
+        {{ form.password.errors }}
+        <div class="row">
+            <label class="small-3 columns">Password</label>
+            <div class="small-9 columns"><input type="password" name="password"></div>
+        </div>
+        <div class="row">
+            <div class="small-3 columns"></div>
+            <div class="small-9 columns"><input type="submit" class="button primary" role="button" value="Login"></div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,21 +1,29 @@
-"""flamingo URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.8/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Add an import:  from blog import urls as blog_urls
-    2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+:Created: 16 August 2015
+:Author: Lucas Connors
+
+"""
+
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
+from django.views.static import serve
+
+from users.decorators import redirect_authenticated
+from users.views import LoginView, logout, home, ProfileView
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/?$', redirect_authenticated(LoginView.as_view()), name='login'),
+    url(r'^logout/?$', logout, name='logout'),
+    url(r'^profile/?$', login_required(ProfileView.as_view()), name='profile'),
+    url(r'^/?$', home, name='home'),
 ]
+
+# Add media folder to urls when DEBUG = True
+if settings.DEBUG:
+    urlpatterns.append(
+        url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
+    )

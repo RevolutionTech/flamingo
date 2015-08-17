@@ -22,6 +22,12 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return unicode(self.user)
 
+    def full_name(self):
+        return "{first} {last}".format(
+            first=self.user.first_name,
+            last=self.user.last_name
+        ).strip()
+
 
 @receiver(post_delete, sender=UserProfile)
 def user_profile_delete(sender, instance, *args, **kwargs):

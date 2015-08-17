@@ -103,3 +103,6 @@ STATICFILES_DIRS = (
     os.path.join(TOP_DIR, 'static'),
 )
 STATIC_URL = '/static/'
+
+# Authentication
+LOGIN_URL = '/login/'

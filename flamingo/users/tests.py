@@ -6,7 +6,7 @@
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.test import TransactionTestCase
+from django.test import Client, TestCase, TransactionTestCase
 
 from users.exceptions import UserAlreadyExistsException
 from users.models import UserProfile
@@ -70,6 +70,13 @@ class UserTestCase(TransactionTestCase):
             self.CREATED_USER_LAST_NAME
         )
         self.assertEquals(
+            created_user_profile.full_name(),
+            "{first} {last}".format(
+                first=self.CREATED_USER_FIRST_NAME,
+                last=self.CREATED_USER_LAST_NAME
+            )
+        )
+        self.assertEquals(
             created_user_profile.bio,
             self.USER_PROFILE_BIO
         )
@@ -99,3 +106,108 @@ class UserTestCase(TransactionTestCase):
                 email=self.USER_EMAIL,
                 password=self.USER_PASSWORD
             )
+
+
+class LoginWebTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+
+    def setUp(self):
+        super(LoginWebTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+
+    def testLoginPageRenders(self):
+        response = self.client.get('/login')
+        self.assertEquals(response.status_code, 200)
+
+    def testUserLogsIn(self):
+        self.client.get('/login')
+        payload = {
+            'username': self.USER_USERNAME,
+            'password': self.USER_PASSWORD,
+        }
+        response = self.client.post('/login', payload, follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/')
+
+    def testRedirectsAuthenticatedUsersToHome(self):
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+        response = self.client.get('/login', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/')
+
+
+class LogoutWebTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+
+    def setUp(self):
+        super(LogoutWebTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+
+    def testRedirectsAfterLogoutToLogin(self):
+        response = self.client.get('/logout', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/login')
+
+    def testRedirectsUnauthenticatedUsersToLogin(self):
+        self.client.logout()
+        response = self.client.get('/logout', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/login')
+
+
+class ProfileWebTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+
+    def setUp(self):
+        super(ProfileWebTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+
+    def testProfilePageRenders(self):
+        response = self.client.get('/profile')
+        self.assertEquals(response.status_code, 200)
+
+    def testRedirectsUnauthenticatedUsersToLogin(self):
+        self.client.logout()
+        response = self.client.get('/profile', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/login/?next=/profile')

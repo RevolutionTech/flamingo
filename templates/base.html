@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static "css/foundation.min.css" %}" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="{% static "css/flamingo.css" %}" type="text/css" charset="utf-8" />
+    </head>
+    <body>
+        <!-- Content -->
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- JS -->
+        <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/modernizr.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/foundation.min.js" %}"></script>
+        <script type="text/javascript">$(document).foundation();</script>
+    </body>
+</html>
