@@ -71,6 +71,10 @@ class PhotoTestCase(TestCase):
 
         # Verify photo properties
         self.assertEquals(
+            unicode(photo),
+            self.PHOTO_TITLE
+        )
+        self.assertEquals(
             photo.title,
             self.PHOTO_TITLE
         )

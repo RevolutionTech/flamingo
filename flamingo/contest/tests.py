@@ -33,6 +33,7 @@ class SponsorTestCase(TestCase):
         self.assertEquals(Sponsor.objects.all().count(), 1)
         sponsor = Sponsor.objects.get()
         sponsor.bio = self.SPONSOR_BIO
+        self.assertEquals(unicode(sponsor), self.CREATED_SPONSOR_NAME)
         self.assertEquals(sponsor.name, self.CREATED_SPONSOR_NAME)
         self.assertEquals(sponsor.bio, self.SPONSOR_BIO)
 
@@ -76,6 +77,13 @@ class ContestTestCase(TestCase):
         )
         self.assertEquals(Contest.objects.all().count(), 1)
         contest = Contest.objects.get()
+        self.assertEquals(
+            unicode(contest),
+            "{sponsor}: {name}".format(
+                sponsor=self.sponsor.name,
+                name=self.CREATED_CONTEST_NAME
+            )
+        )
         self.assertEquals(contest.sponsor, self.sponsor)
         self.assertEquals(contest.name, self.CREATED_CONTEST_NAME)
         self.assertEquals(
