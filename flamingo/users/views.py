@@ -12,7 +12,38 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
-from users.forms import LoginForm
+from users.forms import RegisterForm, LoginForm
+from users.models import UserProfile
+
+
+class RegisterView(FormView):
+
+    template_name = 'register.html'
+    form_class = RegisterForm
+
+    def dispatch(self, request):
+        self.success_url = request.GET.get('next', reverse('home'))
+        return super(RegisterView, self).dispatch(request)
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterView, self).get_context_data(**kwargs)
+        context['redirect_url'] = self.success_url
+        return context
+
+    def form_valid(self, form):
+        d = form.cleaned_data
+        username, password = d['username'], d['password']
+        user_profile = UserProfile.objects.create_account(
+            username=username,
+            email=d['email'],
+            password=password,
+            first_name=d['first_name'],
+            last_name=d['last_name']
+        )
+        user = authenticate(username=username, password=password)
+        if user:
+            auth_login(self.request, user)
+            return super(RegisterView, self).form_valid(form)
 
 
 class LoginView(FormView):

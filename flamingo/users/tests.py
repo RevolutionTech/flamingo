@@ -108,6 +108,57 @@ class UserTestCase(TransactionTestCase):
             )
 
 
+class RegisterWebTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+    CREATED_USER_USERNAME = 'CreatedUser'
+    CREATED_USER_EMAIL = 'created@example.com'
+    CREATED_USER_FIRST_NAME = 'Created'
+    CREATED_USER_LAST_NAME = 'User'
+
+    def setUp(self):
+        super(RegisterWebTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+
+    def testRegisterPageRenders(self):
+        response = self.client.get('/register')
+        self.assertEquals(response.status_code, 200)
+
+    def testUserRegisters(self):
+        UserProfile.objects.all().delete()
+        self.client.get('/register')
+        payload = {
+            'username': self.CREATED_USER_USERNAME,
+            'email': self.CREATED_USER_EMAIL,
+            'password': self.USER_PASSWORD,
+            'password_confirm': self.USER_PASSWORD,
+            'first_name': self.CREATED_USER_FIRST_NAME,
+            'last_name': self.CREATED_USER_LAST_NAME,
+        }
+        response = self.client.post('/register', payload, follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(UserProfile.objects.all().count(), 1)
+
+    def testRedirectsAuthenticatedUsersToHome(self):
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+        response = self.client.get('/register', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/')
+
+
 class LoginWebTestCase(TestCase):
 
     USER_USERNAME = 'jsmith'

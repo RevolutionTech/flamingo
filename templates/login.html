@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1 class="title">flamingo.photo</h1>
+    <h3 class="subheading">Login or <a href="{% url 'register' %}">Create Account</a></h3>
     <form role="form" action="{% url 'login' %}{% if redirect_url %}?next={{ redirect_url }}{% endif %}" method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}

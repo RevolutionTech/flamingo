@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+    <h1 class="title">flamingo.photo</h1>
+    <h3 class="subheading">Create Account or <a href="{% url 'login' %}">Login</a></h3>
+    <form role="form" action="{% url 'register' %}{% if redirect_url %}?next={{ redirect_url }}{% endif %}" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.username.errors }}
+        <div class="row">
+            <label class="small-3 columns">Username</label>
+            <div class="small-9 columns">
+                <input type="text" name="username" placeholder="jsmith" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+            </div>
+        </div>
+        {{ form.email.errors }}
+        <div class="row">
+            <label class="small-3 columns">Email</label>
+            <div class="small-9 columns">
+                <input type="text" name="email" placeholder="jsmith@example.com" {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
+            </div>
+        </div>
+        {{ form.first_name.errors }}
+        <div class="row">
+            <label class="small-3 columns">First Name</label>
+            <div class="small-9 columns">
+                <input type="text" name="first_name" placeholder="John" {% if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %}>
+            </div>
+        </div>
+        {{ form.last_name.errors }}
+        <div class="row">
+            <label class="small-3 columns">Last Name</label>
+            <div class="small-9 columns">
+                <input type="text" name="last_name" placeholder="Smith" {% if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %}>
+            </div>
+        </div>
+        {{ form.password.errors }}
+        <div class="row">
+            <label class="small-3 columns">Password</label>
+            <div class="small-9 columns"><input type="password" name="password"></div>
+        </div>
+        {{ form.password_confirm.errors }}
+        <div class="row">
+            <label class="small-3 columns">Password (confirm)</label>
+            <div class="small-9 columns"><input type="password" name="password_confirm"></div>
+        </div>
+        <div class="row">
+            <div class="small-3 columns"></div>
+            <div class="small-9 columns"><input type="submit" class="button primary" role="button" value="Login"></div>
+        </div>
+    </form>
+{% endblock %}
