@@ -9,6 +9,7 @@ from django.db import transaction
 from django.test import Client, TestCase, TransactionTestCase
 
 from users.exceptions import UserAlreadyExistsException
+from users.forms import RegisterForm, LoginForm
 from users.models import UserProfile
 
 
@@ -108,6 +109,64 @@ class UserTestCase(TransactionTestCase):
             )
 
 
+class RegisterFormTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+    CREATED_USER_USERNAME = 'CreatedUser'
+    CREATED_USER_EMAIL = 'created@example.com'
+
+    def setUp(self):
+        super(RegisterFormTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(RegisterFormTestCase, self).tearDown()
+
+    def testUsernameAlreadyTaken(self):
+        form_data = {
+            'username': self.USER_USERNAME,
+            'email': self.CREATED_USER_EMAIL,
+            'password': self.USER_PASSWORD,
+            'password_confirm': self.USER_PASSWORD,
+        }
+        form = RegisterForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('username' in form.errors)
+
+    def testEmailAlreadyRegistered(self):
+        form_data = {
+            'username': self.CREATED_USER_USERNAME,
+            'email': self.USER_EMAIL,
+            'password': self.USER_PASSWORD,
+            'password_confirm': self.USER_PASSWORD,
+        }
+        form = RegisterForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('email' in form.errors)
+
+    def testPasswordsDoNotMatch(self):
+        form_data = {
+            'username': self.CREATED_USER_USERNAME,
+            'email': self.CREATED_USER_EMAIL,
+            'password': self.USER_PASSWORD,
+            'password_confirm': "oops123",
+        }
+        form = RegisterForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertEquals(len(form.errors['__all__']), 1)
+        (error,) = form.errors['__all__']
+        self.assertTrue('Password' in error and 'not match' in error)
+
+
 class RegisterWebTestCase(TestCase):
 
     USER_USERNAME = 'jsmith'
@@ -126,6 +185,10 @@ class RegisterWebTestCase(TestCase):
             email=self.USER_EMAIL,
             password=self.USER_PASSWORD
         )
+
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(RegisterWebTestCase, self).tearDown()
 
     def testRegisterPageRenders(self):
         response = self.client.get('/register')
@@ -159,6 +222,63 @@ class RegisterWebTestCase(TestCase):
         self.assertEquals(url, 'http://testserver/')
 
 
+class LoginFormTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+    UNCREATED_USER_USERNAME = 'UncreatedUser'
+    UNCREATED_USER_EMAIL = 'uncreated@example.com'
+
+    def setUp(self):
+        super(LoginFormTestCase, self).setUp()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(LoginFormTestCase, self).tearDown()
+
+    def testUsernameDoesNotExist(self):
+        form_data = {
+            'username': self.UNCREATED_USER_USERNAME,
+            'password': self.USER_PASSWORD,
+        }
+        form = LoginForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertEquals(len(form.errors['__all__']), 1)
+        (error,) = form.errors['__all__']
+        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+
+    def testEmailDoesNotExist(self):
+        form_data = {
+            'username': self.UNCREATED_USER_EMAIL,
+            'password': self.USER_PASSWORD,
+        }
+        form = LoginForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertEquals(len(form.errors['__all__']), 1)
+        (error,) = form.errors['__all__']
+        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+
+    def testPasswordIncorrect(self):
+        form_data = {
+            'username': self.USER_USERNAME,
+            'password': 'oops123',
+        }
+        form = LoginForm(form_data)
+        self.assertFalse(form.is_valid())
+        self.assertTrue('__all__' in form.errors)
+        self.assertEquals(len(form.errors['__all__']), 1)
+        (error,) = form.errors['__all__']
+        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+
+
 class LoginWebTestCase(TestCase):
 
     USER_USERNAME = 'jsmith'
@@ -174,6 +294,10 @@ class LoginWebTestCase(TestCase):
             password=self.USER_PASSWORD
         )
 
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(LoginWebTestCase, self).tearDown()
+
     def testLoginPageRenders(self):
         response = self.client.get('/login')
         self.assertEquals(response.status_code, 200)
@@ -182,6 +306,17 @@ class LoginWebTestCase(TestCase):
         self.client.get('/login')
         payload = {
             'username': self.USER_USERNAME,
+            'password': self.USER_PASSWORD,
+        }
+        response = self.client.post('/login', payload, follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/')
+
+    def testUserLogsInWithEmail(self):
+        self.client.get('/login')
+        payload = {
+            'username': self.USER_EMAIL,
             'password': self.USER_PASSWORD,
         }
         response = self.client.post('/login', payload, follow=True)
@@ -219,6 +354,10 @@ class LogoutWebTestCase(TestCase):
             password=self.USER_PASSWORD
         )
 
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(LogoutWebTestCase, self).tearDown()
+
     def testRedirectsAfterLogoutToLogin(self):
         response = self.client.get('/logout', follow=True)
         url, status_code = response.redirect_chain[0]
@@ -251,6 +390,10 @@ class ProfileWebTestCase(TestCase):
             username=self.USER_USERNAME,
             password=self.USER_PASSWORD
         )
+
+    def tearDown(self):
+        UserProfile.objects.all().delete()
+        super(ProfileWebTestCase, self).tearDown()
 
     def testProfilePageRenders(self):
         response = self.client.get('/profile')

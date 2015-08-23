@@ -72,9 +72,10 @@ class LoginForm(forms.Form):
         email = username = None
         try:
             validate_email(email_or_username)
-            email = email_or_username
         except forms.ValidationError:
             username = email_or_username
+        else:
+            email = email_or_username
 
         if email:
             try:
