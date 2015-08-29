@@ -6,11 +6,12 @@
 
 import datetime
 
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.utils import timezone
 import pytz
 
 from contest.models import Sponsor, Contest
+from users.models import UserProfile
 
 
 class SponsorTestCase(TestCase):
@@ -109,3 +110,85 @@ class ContestTestCase(TestCase):
             contest.end,
             contest.submission_close + datetime.timedelta(days=7)
         )
+
+
+class HomeWebTestCase(TestCase):
+
+    USER_USERNAME = 'jsmith'
+    USER_EMAIL = 'jsmith@example.com'
+    USER_PASSWORD = 'abc123'
+    SPONSOR_NAME = 'Super Sponsor'
+    CONTEST_NAME = 'Contest XYZ'
+    CONTEST_DESCRIPTION = 'Are you a master of photography? Show us!'
+    CONTEST_SUBMISSION_OPEN = datetime.datetime(2015, 1, 3, tzinfo=pytz.utc)
+    CONTEST_SUBMISSION_CLOSE = datetime.datetime(2015, 1, 17, tzinfo=pytz.utc)
+    CONTEST_END = datetime.datetime(2015, 1, 31, tzinfo=pytz.utc)
+    CREATED_CONTEST_NAME = 'Created Contest'
+    CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
+
+    def setUp(self):
+        super(HomeWebTestCase, self).setUp()
+        self.client = Client()
+        self.user_profile = UserProfile.objects.create_account(
+            username=self.USER_USERNAME,
+            email=self.USER_EMAIL,
+            password=self.USER_PASSWORD
+        )
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+        self.sponsor = Sponsor.objects.create(name=self.SPONSOR_NAME)
+        self.contest = Contest.objects.create(
+            sponsor=self.sponsor,
+            name=self.CONTEST_NAME,
+            description=self.CONTEST_DESCRIPTION,
+            submission_open=self.CONTEST_SUBMISSION_OPEN,
+            submission_close=self.CONTEST_SUBMISSION_CLOSE,
+            end=self.CONTEST_END
+        )
+
+    def tearDown(self):
+        Contest.objects.all().delete()
+        Sponsor.objects.all().delete()
+        super(HomeWebTestCase, self).tearDown()
+
+    def testHomePageRenders(self):
+        response = self.client.get('/')
+        self.assertEquals(response.status_code, 200)
+
+    def testRedirectsUnauthenticatedUsersToLogin(self):
+        self.client.logout()
+        response = self.client.get('/', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(url, 'http://testserver/login/?next=/')
+
+    def testOnlyActiveContestsShowOnHome(self):
+        Contest.objects.all().delete()
+
+        yesterday = timezone.now() - datetime.timedelta(days=1)
+        next_week = yesterday + datetime.timedelta(days=7)
+        next_week_1_day = next_week + datetime.timedelta(days=1)
+        active_contest_name = 'Active contest'
+        Contest.objects.create(
+            sponsor=self.sponsor,
+            name=active_contest_name,
+            description=self.CONTEST_DESCRIPTION,
+            submission_open=yesterday,
+            submission_close=next_week,
+            end=next_week_1_day
+        )
+        ended_contest_name = 'Ended contest'
+        Contest.objects.create(
+            sponsor=self.sponsor,
+            name=ended_contest_name,
+            description=self.CONTEST_DESCRIPTION,
+            submission_open=yesterday - datetime.timedelta(days=21),
+            submission_close=next_week - datetime.timedelta(days=21),
+            end=next_week_1_day - datetime.timedelta(days=21)
+        )
+
+        response = self.client.get('/')
+        self.assertTrue(active_contest_name in response.content)
+        self.assertFalse(ended_contest_name in response.content)

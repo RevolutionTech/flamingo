@@ -74,11 +74,6 @@ def logout(request):
     return HttpResponseRedirect(reverse('login'))
 
 
-@login_required
-def home(request):
-    return HttpResponseRedirect(reverse('profile'))
-
-
 class ProfileView(TemplateView):
 
     template_name = 'profile.html'

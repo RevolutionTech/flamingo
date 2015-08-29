@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}flamingo.photo{% endblock %}
+
+{% block content %}
+    <h1 class="title">flamingo.photo</h1>
+    <h3 class="subheading">Open Contests</h3>
+    {% for contest in contests %}
+        <li>{{ contest.sponsor.name }}: {{ contest.name }}</li>
+    {% endfor %}
+{% endblock %}

@@ -10,8 +10,9 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 
+from contest.views import HomeView
 from users.decorators import redirect_authenticated
-from users.views import RegisterView, LoginView, logout, home, ProfileView
+from users.views import RegisterView, LoginView, logout, ProfileView
 
 
 urlpatterns = [
@@ -20,7 +21,7 @@ urlpatterns = [
     url(r'^login/?$', redirect_authenticated(LoginView.as_view()), name='login'),
     url(r'^logout/?$', logout, name='logout'),
     url(r'^profile/?$', login_required(ProfileView.as_view()), name='profile'),
-    url(r'^/?$', home, name='home'),
+    url(r'^/?$', login_required(HomeView.as_view()), name='home'),
 ]
 
 # Add media folder to urls when DEBUG = True

@@ -1,3 +1,24 @@
-from django.shortcuts import render
+"""
+:Created: 29 August 2015
+:Author: Lucas Connors
 
-# Create your views here.
+"""
+
+from django.views.generic import TemplateView
+from django.utils import timezone
+
+from contest.models import Contest
+
+
+class HomeView(TemplateView):
+
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        now = timezone.now()
+        context['contests'] = Contest.objects.filter(
+            submission_open__lte=now,
+            submission_close__gt=now
+        )
+        return context

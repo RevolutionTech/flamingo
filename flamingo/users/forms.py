@@ -82,15 +82,11 @@ class LoginForm(forms.Form):
                 return User.objects.get(email=email)
             except User.DoesNotExist:
                 raise forms.ValidationError(cls.FAILED_AUTH_WARNING)
-
-        elif username:
+        else: # username
             try:
                 return User.objects.get(username=username)
             except User.DoesNotExist:
                 raise forms.ValidationError(cls.FAILED_AUTH_WARNING)
-
-        else:
-            raise forms.ValidationError(cls.FAILED_AUTH_WARNING)
 
     def clean(self):
         """ Verify that user with given credentials exists """
