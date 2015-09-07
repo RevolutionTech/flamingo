@@ -6,6 +6,7 @@
 
 import datetime
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -15,6 +16,7 @@ from django.utils import timezone
 class Sponsor(models.Model):
 
     name = models.CharField(max_length=30, db_index=True)
+    slug = models.SlugField(max_length=30, db_index=True)
     bio = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
@@ -25,6 +27,7 @@ class Contest(models.Model):
 
     sponsor = models.ForeignKey(Sponsor)
     name = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=100, db_index=True)
     description = models.TextField(null=True, blank=True)
     submission_open = models.DateTimeField(null=True, blank=True)
     submission_close = models.DateTimeField(null=True, blank=True)
@@ -35,6 +38,9 @@ class Contest(models.Model):
             sponsor=unicode(self.sponsor),
             name=self.name
         )
+
+    def url(self):
+        return reverse('contest_details', kwargs={'slug': self.slug})
 
 
 @receiver(pre_save, sender=Contest)

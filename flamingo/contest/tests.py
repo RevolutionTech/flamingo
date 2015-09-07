@@ -16,7 +16,10 @@ class SponsorTestCase(FlamingoTestCase):
 
     def testCreateSponsor(self):
         Sponsor.objects.all().delete()
-        Sponsor.objects.create(name=self.CREATED_SPONSOR_NAME)
+        Sponsor.objects.create(
+            name=self.CREATED_SPONSOR_NAME,
+            slug=self.CREATED_SPONSOR_SLUG
+        )
         self.assertEquals(Sponsor.objects.all().count(), 1)
         sponsor = Sponsor.objects.get()
         sponsor.bio = self.SPONSOR_BIO
@@ -32,6 +35,7 @@ class ContestTestCase(FlamingoTestCase):
         Contest.objects.create(
             sponsor=self.sponsor,
             name=self.CREATED_CONTEST_NAME,
+            slug=self.CREATED_CONTEST_SLUG,
             description=self.CREATED_CONTEST_DESCRIPTION,
             submission_open=self.CONTEST_SUBMISSION_OPEN,
             submission_close=self.CONTEST_SUBMISSION_CLOSE,
@@ -93,18 +97,22 @@ class HomeWebTestCase(FlamingoTestCase):
         next_week = yesterday + datetime.timedelta(days=7)
         next_week_1_day = next_week + datetime.timedelta(days=1)
         active_contest_name = 'Active contest'
+        active_contest_slug = 'active-contest'
         Contest.objects.create(
             sponsor=self.sponsor,
             name=active_contest_name,
+            slug=active_contest_slug,
             description=self.CONTEST_DESCRIPTION,
             submission_open=yesterday,
             submission_close=next_week,
             end=next_week_1_day
         )
         ended_contest_name = 'Ended contest'
+        ended_contest_slug = 'ended-contest'
         Contest.objects.create(
             sponsor=self.sponsor,
             name=ended_contest_name,
+            slug=ended_contest_slug,
             description=self.CONTEST_DESCRIPTION,
             submission_open=yesterday - datetime.timedelta(days=21),
             submission_close=next_week - datetime.timedelta(days=21),
@@ -114,3 +122,29 @@ class HomeWebTestCase(FlamingoTestCase):
         response = self.client.get('/')
         self.assertTrue(active_contest_name in response.content)
         self.assertFalse(ended_contest_name in response.content)
+
+
+class ContestDetailsWebTestcase(FlamingoTestCase):
+
+    def setUp(self):
+        super(ContestDetailsWebTestcase, self).setUp()
+        self.contest_details_url = '/contest/details/{contest_slug}'.format(
+            contest_slug=self.contest.slug
+        )
+
+    def testContestDetailsPageRenders(self):
+        contest_slug = self.contest.slug
+        response = self.client.get(self.contest_details_url)
+        self.assertEquals(response.status_code, 200)
+
+    def testRedirectsUnauthenticatedUsersToLogin(self):
+        self.client.logout()
+        response = self.client.get(self.contest_details_url, follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(
+            url,
+            'http://testserver/login/?next={contest_details_url}'.format(
+                contest_details_url=self.contest_details_url
+            )
+        )

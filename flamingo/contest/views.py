@@ -22,3 +22,13 @@ class HomeView(TemplateView):
             submission_close__gt=now
         )
         return context
+
+
+class ContestDetailsView(TemplateView):
+
+    template_name = 'contest_details.html'
+
+    def get_context_data(self, slug, **kwargs):
+        context = super(ContestDetailsView, self).get_context_data(**kwargs)
+        context['contest'] = Contest.objects.get(slug=slug)
+        return context

@@ -6,6 +6,6 @@
     <h1 class="title">flamingo.photo</h1>
     <h3 class="subheading">Open Contests</h3>
     {% for contest in contests %}
-        <li>{{ contest.sponsor.name }}: {{ contest.name }}</li>
+        <li>{{ contest.sponsor.name }}: <a href="{{ contest.url }}">{{ contest.name }}</a></li>
     {% endfor %}
 {% endblock %}

@@ -26,15 +26,19 @@ class FlamingoBaseTestCase(object):
     CREATED_USER_LAST_NAME = 'User'
 
     SPONSOR_NAME = 'Super Sponsor'
+    SPONSOR_SLUG = 'super-sponsor'
     SPONSOR_BIO = 'We love photography.'
     CREATED_SPONSOR_NAME = 'Created Sponsor'
+    CREATED_SPONSOR_SLUG = 'created-sponsor'
 
     CONTEST_NAME = 'Contest XYZ'
+    CONTEST_SLUG = 'contest-xyz'
     CONTEST_DESCRIPTION = 'Are you a master of photography? Show us!'
     CONTEST_SUBMISSION_OPEN = datetime.datetime(2015, 1, 3, tzinfo=pytz.utc)
     CONTEST_SUBMISSION_CLOSE = datetime.datetime(2015, 1, 17, tzinfo=pytz.utc)
     CONTEST_END = datetime.datetime(2015, 1, 31, tzinfo=pytz.utc)
     CREATED_CONTEST_NAME = 'Created Contest'
+    CREATED_CONTEST_SLUG = 'created-contest'
     CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
 
     def setUp(self):
@@ -45,10 +49,14 @@ class FlamingoBaseTestCase(object):
             email=self.USER_EMAIL,
             password=self.USER_PASSWORD
         )
-        self.sponsor = Sponsor.objects.create(name=self.SPONSOR_NAME)
+        self.sponsor = Sponsor.objects.create(
+            name=self.SPONSOR_NAME,
+            slug=self.SPONSOR_SLUG
+        )
         self.contest = Contest.objects.create(
             sponsor=self.sponsor,
             name=self.CONTEST_NAME,
+            slug=self.CONTEST_SLUG,
             description=self.CONTEST_DESCRIPTION,
             submission_open=self.CONTEST_SUBMISSION_OPEN,
             submission_close=self.CONTEST_SUBMISSION_CLOSE,
