@@ -18,4 +18,5 @@ Thumbs.db
 
 # Secure files #
 ################
-flamingo/flamingo/settings_secret.py
+flamingo/flamingo/settings/dev.py
+flamingo/flamingo/settings/prod.py

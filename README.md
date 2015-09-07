@@ -27,21 +27,30 @@ In the future you can reactivate the virtual environment with:
 
 ### Installation
 
-Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), psycopg2, [pytz](http://pytz.sourceforge.net/), [pillow](https://pillow.readthedocs.org/), [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/), and python-coveralls. You can do this simply with the command:
+Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), psycopg2, [pytz](http://pytz.sourceforge.net/), [pillow](https://pillow.readthedocs.org/), django-classbasedsettings, [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/), and python-coveralls. You can do this simply with the command:
 
     pip install -r requirements.txt
 
 ### Configuration
 
-Next we will need to create a file in the same directory as `settings.py` called `settings_secret.py`. This is where we will store all of the settings that are specific to your instance of Flamingo. Most of these settings should be only known to you. Your file should define a secret key, and the database credentials. Your `settings_secret.py` file might look something like:
+Next we will need to create a file in the settings directory called `dev.py`. This is where we will store all of the settings that are specific to your dev instance of Flamingo. Most of these settings should be only known to you. Your file should subclass BaseSettings from `base.py` and then define a secret key and the database credentials. Your `dev.py` file might look something like:
 
-    SECRET_KEY = '-3f5yh&(s5%9uigtx^yn=t_woj0@90__fr!t2b*96f5xoyzb%b'
-    DATABASE_USER = 'postgres'
-    DATABASE_PASSWORD = 'abc123'
-    DATABASE_HOST = 'localhost'
-    DATABASE_PORT = '5432'
+    from flamingo.settings.base import BaseSettings
 
-Of course you should [generate your own secret key](http://stackoverflow.com/a/16630719) and use a more secure password for your database.
+    class DevSettings(BaseSettings):
+        SECRET_KEY = '-3f5yh&(s5%9uigtx^yn=t_woj0@90__fr!t2b*96f5xoyzb%b'
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': 'flamingo',
+                'USER': 'postgres',
+                'PASSWORD': 'abc123',
+                'HOST': 'localhost',
+                'PORT': '5432',
+            }
+        }
+
+Of course you should [generate your own secret key](http://stackoverflow.com/a/16630719) and use a more secure password for your database. If you like, you can override more Django settings here. If you do not create this file, you will get a `cbsettings.exceptions.NoMatchingSettings` exception when starting the server.
 
 With everything installed and all files in place, you may now create the database tables. You can do this with:
 
@@ -49,7 +58,15 @@ With everything installed and all files in place, you may now create the databas
 
 ### Deployment
 
-Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
+In your production environment, you'll need to create a prod settings configuration `prod.py`, similar to your `dev.py` file. It may be best to subclass the DevSettings class you created, in order to get something like this:
+
+    from flamingo.settings.dev import DevSettings
+
+    class ProdSettings(DevSettings):
+        DEBUG = False
+        ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
+
+When the `prod.py` file is present, the server will automatically use those settings over `dev.py`. Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
 
     sudo apt-get install runit nginx
 

@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 
 import os
 
+import cbsettings
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flamingo.settings")
+os.environ.setdefault("DJANGO_SETTINGS_FACTORY", "flamingo.settings")
+cbsettings.configure('flamingo.settings.switcher')
 
 application = get_wsgi_application()
