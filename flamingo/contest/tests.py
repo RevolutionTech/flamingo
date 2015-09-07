@@ -6,27 +6,13 @@
 
 import datetime
 
-from django.test import Client, TestCase
 from django.utils import timezone
-import pytz
 
+from flamingo.tests import FlamingoTestCase
 from contest.models import Sponsor, Contest
-from users.models import UserProfile
 
 
-class SponsorTestCase(TestCase):
-
-    SPONSOR_NAME = 'Super Sponsor'
-    SPONSOR_BIO = 'We love photography.'
-    CREATED_SPONSOR_NAME = 'Created Sponsor'
-
-    def setUp(self):
-        super(SponsorTestCase, self).setUp()
-        self.sponsor = Sponsor.objects.create(name=self.SPONSOR_NAME)
-
-    def tearDown(self):
-        Sponsor.objects.all().delete()
-        super(SponsorTestCase, self).tearDown()
+class SponsorTestCase(FlamingoTestCase):
 
     def testCreateSponsor(self):
         Sponsor.objects.all().delete()
@@ -39,32 +25,7 @@ class SponsorTestCase(TestCase):
         self.assertEquals(sponsor.bio, self.SPONSOR_BIO)
 
 
-class ContestTestCase(TestCase):
-
-    SPONSOR_NAME = 'Super Sponsor'
-    CONTEST_NAME = 'Contest XYZ'
-    CONTEST_DESCRIPTION = 'Are you a master of photography? Show us!'
-    CONTEST_SUBMISSION_OPEN = datetime.datetime(2015, 1, 3, tzinfo=pytz.utc)
-    CONTEST_SUBMISSION_CLOSE = datetime.datetime(2015, 1, 17, tzinfo=pytz.utc)
-    CONTEST_END = datetime.datetime(2015, 1, 31, tzinfo=pytz.utc)
-    CREATED_CONTEST_NAME = 'Created Contest'
-    CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
-
-    def setUp(self):
-        super(ContestTestCase, self).setUp()
-        self.sponsor = Sponsor.objects.create(name=self.SPONSOR_NAME)
-        self.contest = Contest.objects.create(
-            sponsor=self.sponsor,
-            name=self.CONTEST_NAME,
-            description=self.CONTEST_DESCRIPTION,
-            submission_open=self.CONTEST_SUBMISSION_OPEN,
-            submission_close=self.CONTEST_SUBMISSION_CLOSE,
-            end=self.CONTEST_END
-        )
-
-    def tearDown(self):
-        Sponsor.objects.all().delete()
-        super(ContestTestCase, self).tearDown()
+class ContestTestCase(FlamingoTestCase):
 
     def testCreateContest(self):
         Contest.objects.all().delete()
@@ -112,46 +73,7 @@ class ContestTestCase(TestCase):
         )
 
 
-class HomeWebTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-    SPONSOR_NAME = 'Super Sponsor'
-    CONTEST_NAME = 'Contest XYZ'
-    CONTEST_DESCRIPTION = 'Are you a master of photography? Show us!'
-    CONTEST_SUBMISSION_OPEN = datetime.datetime(2015, 1, 3, tzinfo=pytz.utc)
-    CONTEST_SUBMISSION_CLOSE = datetime.datetime(2015, 1, 17, tzinfo=pytz.utc)
-    CONTEST_END = datetime.datetime(2015, 1, 31, tzinfo=pytz.utc)
-    CREATED_CONTEST_NAME = 'Created Contest'
-    CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
-
-    def setUp(self):
-        super(HomeWebTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
-        self.sponsor = Sponsor.objects.create(name=self.SPONSOR_NAME)
-        self.contest = Contest.objects.create(
-            sponsor=self.sponsor,
-            name=self.CONTEST_NAME,
-            description=self.CONTEST_DESCRIPTION,
-            submission_open=self.CONTEST_SUBMISSION_OPEN,
-            submission_close=self.CONTEST_SUBMISSION_CLOSE,
-            end=self.CONTEST_END
-        )
-
-    def tearDown(self):
-        Contest.objects.all().delete()
-        Sponsor.objects.all().delete()
-        super(HomeWebTestCase, self).tearDown()
+class HomeWebTestCase(FlamingoTestCase):
 
     def testHomePageRenders(self):
         response = self.client.get('/')

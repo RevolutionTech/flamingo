@@ -66,7 +66,9 @@ In your production environment, you'll need to create a prod settings configurat
         DEBUG = False
         ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 
-When the `prod.py` file is present, the server will automatically use those settings over `dev.py`. Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
+When the `prod.py` file is present, the server will automatically use those settings over `dev.py`.
+
+Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
 
     sudo apt-get install runit nginx
 

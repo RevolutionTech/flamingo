@@ -7,18 +7,14 @@
 import os
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
 from PIL import Image
 
-from users.models import UserProfile
+from flamingo.tests import FlamingoTestCase
 from photo.models import Photo
 
 
-class PhotoTestCase(TestCase):
+class PhotoTestCase(FlamingoTestCase):
 
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
     PHOTO_TITLE = 'John Smith'
     PHOTO_DESCRIPTION = 'A photo of John Smith and Pocahontas.'
     TEST_PHOTOS_DIR = os.path.join(
@@ -26,17 +22,8 @@ class PhotoTestCase(TestCase):
         'testphotos'
     )
 
-    def setUp(self):
-        super(PhotoTestCase, self).setUp()
-        self.user_profile = UserProfile.objects.create_account(
-            self.USER_USERNAME,
-            self.USER_EMAIL,
-            self.USER_PASSWORD
-        )
-
     def tearDown(self):
         Photo.objects.all().delete()
-        UserProfile.objects.all().delete()
         super(PhotoTestCase, self).tearDown()
 
     def testUserAddPhoto(self):

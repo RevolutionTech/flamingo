@@ -5,37 +5,14 @@
 """
 
 from django.contrib.auth.models import User
-from django.db import transaction
-from django.test import Client, TestCase, TransactionTestCase
 
+from flamingo.tests import FlamingoTestCase, FlamingoTransactionTestCase
 from users.exceptions import UserAlreadyExistsException
 from users.forms import RegisterForm, LoginForm
 from users.models import UserProfile
 
 
-class UserTestCase(TransactionTestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-    USER_PROFILE_BIO = 'I love photography.'
-    CREATED_USER_USERNAME = 'CreatedUser'
-    CREATED_USER_EMAIL = 'created@example.com'
-    CREATED_USER_FIRST_NAME = 'Created'
-    CREATED_USER_LAST_NAME = 'User'
-
-    def setUp(self):
-        super(UserTestCase, self).setUp()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        User.objects.all().delete()
-        super(UserTestCase, self).tearDown()
+class UserTestCase(FlamingoTransactionTestCase):
 
     def testCreateAccount(self):
         UserProfile.objects.all().delete()
@@ -109,26 +86,7 @@ class UserTestCase(TransactionTestCase):
             )
 
 
-class RegisterFormTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-    CREATED_USER_USERNAME = 'CreatedUser'
-    CREATED_USER_EMAIL = 'created@example.com'
-
-    def setUp(self):
-        super(RegisterFormTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(RegisterFormTestCase, self).tearDown()
+class RegisterFormTestCase(FlamingoTestCase):
 
     def testUsernameAlreadyTaken(self):
         form_data = {
@@ -167,34 +125,15 @@ class RegisterFormTestCase(TestCase):
         self.assertTrue('Password' in error and 'not match' in error)
 
 
-class RegisterWebTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-    CREATED_USER_USERNAME = 'CreatedUser'
-    CREATED_USER_EMAIL = 'created@example.com'
-    CREATED_USER_FIRST_NAME = 'Created'
-    CREATED_USER_LAST_NAME = 'User'
-
-    def setUp(self):
-        super(RegisterWebTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(RegisterWebTestCase, self).tearDown()
+class RegisterWebTestCase(FlamingoTestCase):
 
     def testRegisterPageRenders(self):
+        self.client.logout()
         response = self.client.get('/register')
         self.assertEquals(response.status_code, 200)
 
     def testUserRegisters(self):
+        self.client.logout()
         UserProfile.objects.all().delete()
         self.client.get('/register')
         payload = {
@@ -212,35 +151,16 @@ class RegisterWebTestCase(TestCase):
         self.assertEquals(UserProfile.objects.all().count(), 1)
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
         response = self.client.get('/register', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
         self.assertEquals(url, 'http://testserver/')
 
 
-class LoginFormTestCase(TestCase):
+class LoginFormTestCase(FlamingoTestCase):
 
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
     UNCREATED_USER_USERNAME = 'UncreatedUser'
     UNCREATED_USER_EMAIL = 'uncreated@example.com'
-
-    def setUp(self):
-        super(LoginFormTestCase, self).setUp()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(LoginFormTestCase, self).tearDown()
 
     def testUsernameDoesNotExist(self):
         form_data = {
@@ -279,30 +199,15 @@ class LoginFormTestCase(TestCase):
         self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
 
 
-class LoginWebTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-
-    def setUp(self):
-        super(LoginWebTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(LoginWebTestCase, self).tearDown()
+class LoginWebTestCase(FlamingoTestCase):
 
     def testLoginPageRenders(self):
+        self.client.logout()
         response = self.client.get('/login')
         self.assertEquals(response.status_code, 200)
 
     def testUserLogsIn(self):
+        self.client.logout()
         self.client.get('/login')
         payload = {
             'username': self.USER_USERNAME,
@@ -314,6 +219,7 @@ class LoginWebTestCase(TestCase):
         self.assertEquals(url, 'http://testserver/')
 
     def testUserLogsInWithEmail(self):
+        self.client.logout()
         self.client.get('/login')
         payload = {
             'username': self.USER_EMAIL,
@@ -325,38 +231,13 @@ class LoginWebTestCase(TestCase):
         self.assertEquals(url, 'http://testserver/')
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
         response = self.client.get('/login', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
         self.assertEquals(url, 'http://testserver/')
 
 
-class LogoutWebTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-
-    def setUp(self):
-        super(LogoutWebTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(LogoutWebTestCase, self).tearDown()
+class LogoutWebTestCase(FlamingoTestCase):
 
     def testRedirectsAfterLogoutToLogin(self):
         response = self.client.get('/logout', follow=True)
@@ -372,28 +253,7 @@ class LogoutWebTestCase(TestCase):
         self.assertEquals(url, 'http://testserver/login')
 
 
-class ProfileWebTestCase(TestCase):
-
-    USER_USERNAME = 'jsmith'
-    USER_EMAIL = 'jsmith@example.com'
-    USER_PASSWORD = 'abc123'
-
-    def setUp(self):
-        super(ProfileWebTestCase, self).setUp()
-        self.client = Client()
-        self.user_profile = UserProfile.objects.create_account(
-            username=self.USER_USERNAME,
-            email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
-        )
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
-
-    def tearDown(self):
-        UserProfile.objects.all().delete()
-        super(ProfileWebTestCase, self).tearDown()
+class ProfileWebTestCase(FlamingoTestCase):
 
     def testProfilePageRenders(self):
         response = self.client.get('/profile')
