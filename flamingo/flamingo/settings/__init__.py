@@ -15,8 +15,8 @@ SETTINGS_DIR = os.path.dirname(__file__)
 dev_settings_exists = os.path.isfile(os.path.join(SETTINGS_DIR, 'dev.py'))
 prod_settings_exists = os.path.isfile(os.path.join(SETTINGS_DIR, 'prod.py'))
 
-from flamingo.settings.base import BaseSettings
-switcher.register(BaseSettings, 'TRAVIS' in os.environ)
+from flamingo.settings.travis import TravisSettings
+switcher.register(TravisSettings, 'TRAVIS' in os.environ)
 
 if dev_settings_exists:
     from flamingo.settings.dev import DevSettings
