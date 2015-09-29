@@ -2,6 +2,8 @@
 ### Created by: Lucas Connors
 
 [![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo) [![Coverage Status](https://coveralls.io/repos/RevolutionTech/flamingo/badge.svg?branch=master&service=github)](https://coveralls.io/github/RevolutionTech/flamingo?branch=master)
+[![Code Climate](https://codeclimate.com/github/RevolutionTech/flamingo/badges/gpa.svg)](https://codeclimate.com/github/RevolutionTech/flamingo)
+[![Dependency Status](https://www.versioneye.com/user/projects/5609e6a35a262f001e00058c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5609e6a35a262f001e00058c)
 
 ***
 
