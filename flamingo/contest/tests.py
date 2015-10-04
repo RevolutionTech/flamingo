@@ -124,10 +124,36 @@ class HomeWebTestCase(FlamingoTestCase):
         self.assertFalse(ended_contest_name in response.content)
 
 
-class ContestDetailsWebTestcase(FlamingoTestCase):
+class SponsorDetailsWebTestCase(FlamingoTestCase):
 
     def setUp(self):
-        super(ContestDetailsWebTestcase, self).setUp()
+        super(SponsorDetailsWebTestCase, self).setUp()
+        self.sponsor_details_url = '/sponsor/details/{sponsor_slug}'.format(
+            sponsor_slug=self.sponsor.slug
+        )
+
+    def testSponsorDetailsPageRenders(self):
+        sponsor_slug = self.sponsor.slug
+        response = self.client.get(self.sponsor_details_url)
+        self.assertEquals(response.status_code, 200)
+
+    def testRedirectsUnauthenticatedUSersToLogin(self):
+        self.client.logout()
+        response = self.client.get(self.sponsor_details_url, follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(
+            url,
+            'http://testserver/login/?next={sponsor_details_url}'.format(
+                sponsor_details_url=self.sponsor_details_url
+            )
+        )
+
+
+class ContestDetailsWebTestCase(FlamingoTestCase):
+
+    def setUp(self):
+        super(ContestDetailsWebTestCase, self).setUp()
         self.contest_details_url = '/contest/details/{contest_slug}'.format(
             contest_slug=self.contest.slug
         )

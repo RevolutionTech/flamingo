@@ -4,6 +4,6 @@
 
 {% block content %}
     <h1 class="title">{{ contest.name }}</h1>
-    <h3 class="subheading">Sponsored by {{ contest.sponsor.name }}</h3>
+    <h3 class="subheading">Sponsored by <a href="{{ contest.sponsor.url }}">{{ contest.sponsor.name }}</a></h3>
     <p>{{ contest.description }}</p>
 {% endblock %}

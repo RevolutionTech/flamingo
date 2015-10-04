@@ -7,7 +7,7 @@
 from django.views.generic import TemplateView
 from django.utils import timezone
 
-from contest.models import Contest
+from contest.models import Sponsor, Contest
 
 
 class HomeView(TemplateView):
@@ -21,6 +21,16 @@ class HomeView(TemplateView):
             submission_open__lte=now,
             submission_close__gt=now
         )
+        return context
+
+
+class SponsorDetailsView(TemplateView):
+
+    template_name = 'sponsor_details.html'
+
+    def get_context_data(self, slug, **kwargs):
+        context = super(SponsorDetailsView, self).get_context_data(**kwargs)
+        context['sponsor'] = Sponsor.objects.get(slug=slug)
         return context
 
 

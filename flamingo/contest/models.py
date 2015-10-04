@@ -22,6 +22,9 @@ class Sponsor(models.Model):
     def __unicode__(self):
         return self.name
 
+    def url(self):
+        return reverse('sponsor_details', kwargs={'slug': self.slug})
+
 
 class Contest(models.Model):
 
