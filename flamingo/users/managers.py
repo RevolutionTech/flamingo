@@ -23,7 +23,7 @@ class UserProfileManager(models.Manager):
         if User.objects.filter(email=email).exists():
             raise UserAlreadyExistsException(
                 "A user with the email {email} already exists."
-                    .format(email=email)
+                .format(email=email)
             )
 
         # Create user object
@@ -32,7 +32,7 @@ class UserProfileManager(models.Manager):
         except IntegrityError:
             raise UserAlreadyExistsException(
                 "A user with the username {username} already exists."
-                    .format(username=username)
+                .format(username=username)
             )
         if first_name or last_name:
             if first_name:

@@ -6,7 +6,6 @@
 
 from django.contrib.auth import authenticate, login as auth_login, \
     logout as auth_logout
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
@@ -33,7 +32,7 @@ class RegisterView(FormView):
     def form_valid(self, form):
         d = form.cleaned_data
         username, password = d['username'], d['password']
-        user_profile = UserProfile.objects.create_account(
+        UserProfile.objects.create_account(
             username=username,
             email=d['email'],
             password=password,

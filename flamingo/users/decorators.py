@@ -7,7 +7,7 @@
 import functools
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
 
 def redirect_authenticated(func):
