@@ -22,10 +22,6 @@ class PhotoTestCase(FlamingoTestCase):
         'testphotos'
     )
 
-    def tearDown(self):
-        Photo.objects.all().delete()
-        super(PhotoTestCase, self).tearDown()
-
     def testUserAddPhoto(self):
         # Get photo from testphotos/ directory
         photo_filename = 'jsmith.jpg'
@@ -73,3 +69,8 @@ class PhotoTestCase(FlamingoTestCase):
         img = Image.open(photo.img)
         self.assertEquals(img.width, jsmith_img.width)
         self.assertEquals(img.height, jsmith_img.height)
+
+        # Delete photo
+        media_file_path = photo.img.file.name
+        photo.delete()
+        os.remove(media_file_path)
