@@ -126,3 +126,15 @@ class FlamingoTestCase(FlamingoBaseTestCase, TestCase):
 
 class FlamingoTransactionTestCase(FlamingoBaseTestCase, TransactionTestCase):
     pass
+
+
+class FlamingoGeneralTestCase(FlamingoTestCase):
+
+    def testCreateTestPhotoMissing(self):
+        with self.assertRaises(IOError):
+            self.create_test_photo(
+                self.user_profile,
+                self.CREATED_PHOTO_TITLE,
+                'missing.jpg',
+                self.CREATED_PHOTO_DESCRIPTION
+            )
