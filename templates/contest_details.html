@@ -1,9 +1,33 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}{{ contest.name }}{% endblock %}
+
+{% block cssincludes %}
+    <link rel="stylesheet" href="{% static "slick/slick.css" %}" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="{% static "slick/slick-theme.css" %}" type="text/css" charset="utf-8" />
+{% endblock %}
 
 {% block content %}
     <h1 class="title">{{ contest.name }}</h1>
     <h3 class="subheading">Sponsored by <a href="{{ contest.sponsor.url }}">{{ contest.sponsor.name }}</a></h3>
     <p>{{ contest.description }}</p>
+    <div class="entries">
+        {% for entry in entries %}
+            <div><img src="{{ entry.photo.img.url }}" /></div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block jsincludes %}
+    <script type="text/javascript" src="{% static "slick/slick.min.js" %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.entries').slick({
+                slidesToShow: 3,
+                autoplay: true,
+                lazyLoad: 'ondemand'
+            });
+        });
+    </script>
 {% endblock %}

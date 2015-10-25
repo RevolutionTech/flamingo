@@ -12,6 +12,8 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+from photo.models import Photo
+
 
 class Sponsor(models.Model):
 
@@ -55,3 +57,15 @@ def contest_pre_save(sender, instance, *args, **kwargs):
             datetime.timedelta(days=7)
     if not instance.end:
         instance.end = instance.submission_close + datetime.timedelta(days=7)
+
+
+class Entry(models.Model):
+
+    contest = models.ForeignKey(Contest)
+    photo = models.ForeignKey(Photo)
+
+    class Meta:
+        verbose_name_plural = "Entries"
+
+    def __unicode__(self):
+        return unicode(self.photo)

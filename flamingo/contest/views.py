@@ -7,7 +7,7 @@
 from django.views.generic import TemplateView
 from django.utils import timezone
 
-from contest.models import Sponsor, Contest
+from contest.models import Sponsor, Contest, Entry
 
 
 class HomeView(TemplateView):
@@ -40,5 +40,7 @@ class ContestDetailsView(TemplateView):
 
     def get_context_data(self, slug, **kwargs):
         context = super(ContestDetailsView, self).get_context_data(**kwargs)
-        context['contest'] = Contest.objects.get(slug=slug)
+        contest = Contest.objects.get(slug=slug)
+        context['contest'] = contest
+        context['entries'] = Entry.objects.filter(contest=contest)
         return context

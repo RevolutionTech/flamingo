@@ -6,7 +6,7 @@
 
 from django.contrib import admin
 
-from contest.models import Sponsor, Contest
+from contest.models import Sponsor, Contest, Entry
 
 
 class SponsorAdmin(admin.ModelAdmin):
@@ -19,3 +19,4 @@ class ContestAdmin(admin.ModelAdmin):
 
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(Contest, ContestAdmin)
+admin.site.register(Entry)

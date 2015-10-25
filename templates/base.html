@@ -7,6 +7,7 @@
         <link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{% static "css/foundation.min.css" %}" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="{% static "css/flamingo.css" %}" type="text/css" charset="utf-8" />
+        {% block cssincludes %}{% endblock %}
     </head>
     <body>
         <!-- Content -->
@@ -20,5 +21,6 @@
         <script type="text/javascript" src="{% static "js/modernizr.js" %}"></script>
         <script type="text/javascript" src="{% static "js/foundation.min.js" %}"></script>
         <script type="text/javascript">$(document).foundation();</script>
+        {% block jsincludes %}{% endblock %}
     </body>
 </html>

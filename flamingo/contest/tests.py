@@ -9,7 +9,7 @@ import datetime
 from django.utils import timezone
 
 from flamingo.tests import FlamingoTestCase
-from contest.models import Sponsor, Contest
+from contest.models import Sponsor, Contest, Entry
 
 
 class SponsorTestCase(FlamingoTestCase):
@@ -75,6 +75,24 @@ class ContestTestCase(FlamingoTestCase):
             contest.end,
             contest.submission_close + datetime.timedelta(days=7)
         )
+
+
+class EntryTestCase(FlamingoTestCase):
+
+    def testCreateEntry(self):
+        Entry.objects.all().delete()
+        Entry.objects.create(
+            contest=self.contest,
+            photo=self.photo
+        )
+        self.assertEquals(Entry.objects.all().count(), 1)
+        entry = Entry.objects.get()
+        self.assertEquals(
+            unicode(entry),
+            unicode(entry.photo)
+        )
+        self.assertEquals(entry.contest, self.contest)
+        self.assertEquals(entry.photo, self.photo)
 
 
 class HomeWebTestCase(FlamingoTestCase):
