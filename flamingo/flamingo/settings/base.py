@@ -59,7 +59,13 @@ class BaseSettings(DjangoDefaults):
     ]
     WSGI_APPLICATION = 'flamingo.wsgi.application'
 
-    # Database
+    # Cache and Database
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',

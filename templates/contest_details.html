@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block title %}{{ contest.name }}{% endblock %}
 
@@ -14,7 +15,11 @@
     <p>{{ contest.description }}</p>
     <div class="entries">
         {% for entry in entries %}
-            <div><img src="{{ entry.photo.img.url }}" /></div>
+            {% thumbnail entry.photo.img "x300" as thumb %}
+                <div>
+                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ entry.photo.title }}" />
+                </div>
+            {% endthumbnail %}
         {% endfor %}
     </div>
 {% endblock %}
@@ -25,6 +30,7 @@
         $(document).ready(function(){
             $('.entries').slick({
                 slidesToShow: 3,
+                variableWidth: true,
                 autoplay: true,
                 lazyLoad: 'ondemand'
             });
