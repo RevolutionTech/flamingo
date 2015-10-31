@@ -15,11 +15,11 @@
     <p>{{ contest.description }}</p>
     <div class="entries">
         {% for entry in entries %}
-            {% thumbnail entry.photo.img "x300" as thumb %}
-                <div>
+            <div>
+                {% thumbnail entry.photo.img "x300" as thumb %}
                     <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ entry.photo.title }}" />
-                </div>
-            {% endthumbnail %}
+                {% endthumbnail %}
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
