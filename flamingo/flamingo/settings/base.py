@@ -82,13 +82,14 @@ class BaseSettings(DjangoDefaults):
     USE_L10N = True
     USE_TZ = True
 
-    # Static files (CSS, JavaScript, Images)
+    # Static files (CSS, JavaScript, Images) and Media
     MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
     MEDIA_URL = '/media/'
     STATICFILES_DIRS = (
         os.path.join(TOP_DIR, 'static'),
     )
     STATIC_URL = '/static/'
+    MAXIMUM_IMAGE_SIZE = 2 * 1024 * 1024 # 2MB
 
     # Authentication
     LOGIN_URL = '/login/'

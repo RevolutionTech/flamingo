@@ -54,7 +54,7 @@ class FlamingoBaseTestCase(object):
     CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
 
     @classmethod
-    def create_test_photo(cls, user_profile, title, filename, description):
+    def create_test_image(cls, filename):
         photo_full_filename = os.path.join(
             cls.TEST_PHOTOS_DIR,
             filename
@@ -66,11 +66,15 @@ class FlamingoBaseTestCase(object):
                 "Test photo \"{filename}\" missing or could not be read."
                 .format(filename=filename)
             )
-        image = SimpleUploadedFile(
+        return SimpleUploadedFile(
             name=filename,
             content=image_content,
             content_type='image/jpeg'
         )
+
+    @classmethod
+    def create_test_photo(cls, user_profile, title, filename, description):
+        image = cls.create_test_image(filename)
         photo = Photo.objects.create(
             user_profile=user_profile,
             title=title,
@@ -81,7 +85,6 @@ class FlamingoBaseTestCase(object):
 
     def setUp(self):
         super(FlamingoBaseTestCase, self).setUp()
-        self.client = Client()
         self.user_profile = UserProfile.objects.create_account(
             username=self.USER_USERNAME,
             email=self.USER_EMAIL,
@@ -132,9 +135,4 @@ class FlamingoGeneralTestCase(FlamingoTestCase):
 
     def testCreateTestPhotoMissing(self):
         with self.assertRaises(IOError):
-            self.create_test_photo(
-                self.user_profile,
-                self.CREATED_PHOTO_TITLE,
-                'missing.jpg',
-                self.CREATED_PHOTO_DESCRIPTION
-            )
+            self.create_test_image('missing.jpg')

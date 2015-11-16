@@ -10,7 +10,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 
-from contest.views import HomeView, SponsorDetailsView, ContestDetailsView
+from contest.views import HomeView, SponsorDetailsView, ContestDetailsView, \
+    contest_upload_photo_view
 from users.decorators import redirect_authenticated
 from users.views import RegisterView, LoginView, logout, ProfileView
 
@@ -22,6 +23,7 @@ urlpatterns = [
     url(r'^logout/?$', logout, name='logout'),
     url(r'^sponsor/details/(?P<slug>[\w_-]+)/?$', login_required(SponsorDetailsView.as_view()), name='sponsor_details'),
     url(r'^contest/details/(?P<slug>[\w_-]+)/?$', login_required(ContestDetailsView.as_view()), name='contest_details'),
+    url(r'^contest/upload/(?P<slug>[\w_-]+)/?$', contest_upload_photo_view, name='contest_upload_photo'),
     url(r'^profile/?$', login_required(ProfileView.as_view()), name='profile'),
     url(r'^/?$', login_required(HomeView.as_view()), name='home'),
 ]

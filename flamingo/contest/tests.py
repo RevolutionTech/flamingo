@@ -6,6 +6,7 @@
 
 import datetime
 
+from django.test import override_settings
 from django.utils import timezone
 
 from flamingo.tests import FlamingoTestCase
@@ -192,3 +193,32 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
                 contest_details_url=self.contest_details_url
             )
         )
+
+
+class ContestUploadPhotoTestCase(FlamingoTestCase):
+
+    PHOTO_FILENAME = 'jsmith.jpg'
+    PHOTO_NONIMAGE_FILENAME = 'nonimage.jpg'
+
+    def setUp(self):
+        super(ContestUploadPhotoTestCase, self).setUp()
+        self.contest_upload_url = '/contest/upload/{contest_slug}'.format(
+            contest_slug=self.contest.slug
+        )
+
+    def testSuccessfulUpload(self):
+        image = self.create_test_image(filename=self.PHOTO_FILENAME)
+        response = self.client.post(self.contest_upload_url, {'image': image})
+        self.assertEquals(response.status_code, 205)
+
+    # For this test, set the maximum image size to 5 bytes
+    @override_settings(MAXIMUM_IMAGE_SIZE=5)
+    def testRejectLargePhotos(self):
+        image = self.create_test_image(filename=self.PHOTO_FILENAME)
+        response = self.client.post(self.contest_upload_url, {'image': image})
+        self.assertEquals(response.status_code, 400)
+
+    def testRejectNonImages(self):
+        image = self.create_test_image(filename=self.PHOTO_NONIMAGE_FILENAME)
+        response = self.client.post(self.contest_upload_url, {'image': image})
+        self.assertEquals(response.status_code, 400)

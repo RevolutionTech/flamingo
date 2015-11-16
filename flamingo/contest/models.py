@@ -47,6 +47,9 @@ class Contest(models.Model):
     def url(self):
         return reverse('contest_details', kwargs={'slug': self.slug})
 
+    def upload_photo_url(self):
+        return reverse('contest_upload_photo', kwargs={'slug': self.slug})
+
 
 @receiver(pre_save, sender=Contest)
 def contest_pre_save(sender, instance, *args, **kwargs):
