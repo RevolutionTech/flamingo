@@ -9,7 +9,7 @@ $(document).ready(function(){
         paramName: "image",
         maxFilesize: 2, // MB
         init: function() {
-            this.on("success", function(file) {
+            this.on("queuecomplete", function(file) {
                 // Refresh the page to see uploaded contents
                 location.reload();
             });
