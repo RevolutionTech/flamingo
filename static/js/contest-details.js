@@ -7,6 +7,12 @@ $(document).ready(function(){
     });
     Dropzone.options.dropzoneSubmitPhoto = {
         paramName: "image",
-        maxFilesize: 2 // MB
+        maxFilesize: 2, // MB
+        init: function() {
+            this.on("success", function(file) {
+                // Refresh the page to see uploaded contents
+                location.reload();
+            });
+        }
     };
 });
