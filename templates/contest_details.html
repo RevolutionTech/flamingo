@@ -33,18 +33,5 @@
 {% block jsincludes %}
     <script type="text/javascript" src="{% static "slick/slick.min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/dropzone.js" %}"></script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('.entries').slick({
-                slidesToShow: 3,
-                variableWidth: true,
-                autoplay: true,
-                lazyLoad: 'ondemand'
-            });
-            Dropzone.options.dropzoneSubmitPhoto = {
-                paramName: "image",
-                maxFilesize: 2 // MB
-            };
-        });
-    </script>
+    <script type="text/javascript" src="{% static "js/contest-details.js" %}"></script>
 {% endblock %}
