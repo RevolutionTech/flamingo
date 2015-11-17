@@ -14,6 +14,6 @@ class UploadPhotoForm(forms.Form):
 
     def clean_image(self):
         image = self.cleaned_data['image']
-        if image._size > settings.MAXIMUM_IMAGE_SIZE:
+        if image.size > settings.MAXIMUM_IMAGE_SIZE:
             raise forms.ValidationError("Image file too large (2MB maximum).")
         return image
