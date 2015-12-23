@@ -10,7 +10,7 @@ from django.test import override_settings
 from django.utils import timezone
 
 from flamingo.tests import FlamingoTestCase
-from contest.models import Sponsor, Contest, Entry
+from contest.models import Sponsor, Contest, Entry, Vote
 
 
 class SponsorTestCase(FlamingoTestCase):
@@ -96,6 +96,67 @@ class EntryTestCase(FlamingoTestCase):
         self.assertEquals(entry.photo, self.photo)
 
 
+class VoteTestCase(FlamingoTestCase):
+
+    def testCreateUpvote(self):
+        Vote.objects.all().delete()
+        Vote.objects.create(
+            entry=self.entry,
+            user=self.user,
+            vote_type=Vote.UPVOTE
+        )
+        self.assertEquals(Vote.objects.all().count(), 1)
+        vote = Vote.objects.get()
+        self.assertEquals(
+            unicode(vote),
+            'Upvote by {user} for {entry}'.format(
+                user=unicode(self.user),
+                entry=unicode(self.entry)
+            )
+        )
+
+    def testCreateDownvote(self):
+        Vote.objects.all().delete()
+        Vote.objects.create(
+            entry=self.entry,
+            user=self.user,
+            vote_type=Vote.DOWNVOTE
+        )
+        self.assertEquals(Vote.objects.all().count(), 1)
+        vote = Vote.objects.get()
+        self.assertEquals(
+            unicode(vote),
+            'Downvote by {user} for {entry}'.format(
+                user=unicode(self.user),
+                entry=unicode(self.entry)
+            )
+        )
+
+    def testUserCannotUpvoteTwice(self):
+        Vote.objects.all().delete()
+        self.assertEquals(self.entry.vote_count(), 0)
+        vote_count = self.entry.upvote(user=self.user)
+        self.assertEquals(vote_count, 1)
+        vote_count = self.entry.upvote(user=self.user)
+        self.assertEquals(vote_count, 1)
+
+    def testUserCannotDownvoteTwice(self):
+        Vote.objects.all().delete()
+        self.assertEquals(self.entry.vote_count(), 0)
+        vote_count = self.entry.downvote(user=self.user)
+        self.assertEquals(vote_count, -1)
+        vote_count = self.entry.downvote(user=self.user)
+        self.assertEquals(vote_count, -1)
+
+    def testUserCanChangeVote(self):
+        Vote.objects.all().delete()
+        self.assertEquals(self.entry.vote_count(), 0)
+        vote_count = self.entry.upvote(user=self.user)
+        self.assertEquals(vote_count, 1)
+        vote_count = self.entry.downvote(user=self.user)
+        self.assertEquals(vote_count, -1)
+
+
 class HomeWebTestCase(FlamingoTestCase):
 
     def testHomePageRenders(self):
@@ -156,7 +217,7 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
         response = self.client.get(self.sponsor_details_url)
         self.assertEquals(response.status_code, 200)
 
-    def testRedirectsUnauthenticatedUSersToLogin(self):
+    def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
         response = self.client.get(self.sponsor_details_url, follow=True)
         url, status_code = response.redirect_chain[0]
@@ -211,6 +272,17 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
         response = self.client.post(self.contest_upload_url, {'image': image})
         self.assertEquals(response.status_code, 205)
 
+    def testRejectInvalidContest(self):
+        invalid_contest_upload_url = '/contest/upload/{contest_slug}'.format(
+            contest_slug='nonexistent-contest'
+        )
+        image = self.create_test_image(filename=self.PHOTO_FILENAME)
+        response = self.client.post(
+            invalid_contest_upload_url,
+            {'image': image}
+        )
+        self.assertEquals(response.status_code, 404)
+
     # For this test, set the maximum image size to 5 bytes
     @override_settings(MAXIMUM_IMAGE_SIZE=5)
     def testRejectLargePhotos(self):
@@ -222,3 +294,67 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
         image = self.create_test_image(filename=self.PHOTO_NONIMAGE_FILENAME)
         response = self.client.post(self.contest_upload_url, {'image': image})
         self.assertEquals(response.status_code, 400)
+
+
+class ContestVoteEntryTestCase(FlamingoTestCase):
+
+    def testSuccessfulUpvote(self):
+        contest_upvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug=self.contest.slug,
+                entry_id=self.entry.id
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 200)
+
+    def testSuccessfulDownvote(self):
+        contest_downvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/downvote/'.format(
+                contest_slug=self.contest.slug,
+                entry_id=self.entry.id
+            )
+        response = self.client.post(contest_downvote_url)
+        self.assertEquals(response.status_code, 200)
+
+    def testRejectInvalidContest(self):
+        contest_upvote_url = \
+            '/contest/details{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug='nonexistent-contest',
+                entry_id=self.entry.id
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 404)
+
+    def testRejectInvalidEntry(self):
+        contest_upvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug=self.contest.slug,
+                entry_id=Entry.objects.all().order_by('-id')[0].id + 1
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 404)
+
+    def testRejectNonMatchingEntry(self):
+        new_contest = Contest.objects.create(
+            sponsor=self.sponsor,
+            name=self.CREATED_CONTEST_NAME,
+            slug=self.CREATED_CONTEST_SLUG,
+            description=self.CREATED_CONTEST_DESCRIPTION,
+            submission_open=self.CONTEST_SUBMISSION_OPEN,
+            submission_close=self.CONTEST_SUBMISSION_CLOSE,
+            end=self.CONTEST_END
+        )
+        _, new_photo = self.create_test_photo(
+            self.user_profile,
+            'New photo',
+            self.CREATED_PHOTO_FILENAME,
+            self.CREATED_PHOTO_DESCRIPTION
+        )
+        new_entry = Entry.objects.create(contest=new_contest, photo=new_photo)
+        contest_upvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug=self.contest.slug,
+                entry_id=new_entry.id
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 404)

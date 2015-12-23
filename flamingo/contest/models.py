@@ -6,6 +6,7 @@
 
 import datetime
 
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import pre_save
@@ -72,3 +73,62 @@ class Entry(models.Model):
 
     def __unicode__(self):
         return unicode(self.photo)
+
+    def vote_count(self):
+        votes = Vote.objects.filter(entry=self)
+        num_upvotes = votes.filter(vote_type=Vote.UPVOTE).count()
+        num_downvotes = votes.filter(vote_type=Vote.DOWNVOTE).count()
+        return num_upvotes - num_downvotes
+
+    def vote(self, user, vote_type):
+        Vote.objects.update_or_create(
+            entry=self,
+            user=user,
+            defaults={'vote_type': vote_type}
+        )
+        return self.vote_count()
+
+    def has_voted(self, user, vote_type):
+        return Vote.objects.filter(
+            entry=self,
+            user=user,
+            vote_type=vote_type
+        ).exists()
+
+    def upvote(self, user):
+        return self.vote(user, Vote.UPVOTE)
+
+    def has_upvoted(self, user):
+        return self.has_voted(user, Vote.UPVOTE)
+
+    def downvote(self, user):
+        return self.vote(user, Vote.DOWNVOTE)
+
+    def has_downvoted(self, user):
+        return self.has_voted(user, Vote.DOWNVOTE)
+
+
+class Vote(models.Model):
+    DOWNVOTE = 0
+    UPVOTE = 1
+    VOTE_CHOICES = (
+        (DOWNVOTE, 'Downvote'),
+        (UPVOTE, 'Upvote'),
+    )
+
+    entry = models.ForeignKey(Entry)
+    user = models.ForeignKey(User)
+    vote_type = models.PositiveSmallIntegerField(
+        choices=VOTE_CHOICES,
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = (('entry', 'user',),)
+
+    def __unicode__(self):
+        return "{vote_type} by {user} for {entry}".format(
+            vote_type=self.get_vote_type_display(),
+            entry=unicode(self.entry),
+            user=unicode(self.user)
+        )

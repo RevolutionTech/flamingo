@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% load thumbnail %}
 
 {% block title %}{{ contest.name }}{% endblock %}
 
@@ -16,10 +15,8 @@
     <p>{{ contest.description }}</p>
     <div class="entries">
         {% for entry in entries %}
-            <div>
-                {% thumbnail entry.photo.img "x300" as thumb %}
-                    <img src="{{ thumb.url }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt="{{ entry.photo.title }}" />
-                {% endthumbnail %}
+            <div class="entry" id="{{ entry.id }}">
+                {% include "includes/photo-entry.html" %}
             </div>
         {% endfor %}
     </div>
@@ -33,5 +30,8 @@
 {% block jsincludes %}
     <script type="text/javascript" src="{% static "slick/slick.min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/dropzone.js" %}"></script>
+    <script type="text/javascript">
+        var contest_slug = "{{ contest.slug }}";
+    </script>
     <script type="text/javascript" src="{% static "js/contest-details.js" %}"></script>
 {% endblock %}

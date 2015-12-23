@@ -5,7 +5,8 @@
 """
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, \
+    HttpResponseNotFound
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.utils import timezone
@@ -25,7 +26,7 @@ class HomeView(TemplateView):
         now = timezone.now()
         context['contests'] = Contest.objects.filter(
             submission_open__lte=now,
-            submission_close__gt=now
+            end__gt=now
         )
         return context
 
@@ -46,14 +47,25 @@ class ContestDetailsView(TemplateView):
 
     def get_context_data(self, slug, **kwargs):
         context = super(ContestDetailsView, self).get_context_data(**kwargs)
+        user = self.request.user
         contest = Contest.objects.get(slug=slug)
+
         context['contest'] = contest
-        context['entries'] = Entry.objects.filter(contest=contest)
+        context['entries'] = map(
+            lambda entry: {
+                'id': entry.id,
+                'photo': entry.photo,
+                'vote_count': entry.vote_count(),
+                'has_upvoted': entry.has_upvoted(user),
+                'has_downvoted': entry.has_downvoted(user),
+            },
+            Entry.objects.filter(contest=contest)
+        )
         return context
 
 
 @login_required
-def contest_upload_photo_view(request, slug, **kwargs):
+def contest_upload_photo(request, slug, **kwargs):
     contest = get_object_or_404(Contest, slug=slug)
 
     # Validate image
@@ -76,3 +88,18 @@ def contest_upload_photo_view(request, slug, **kwargs):
 
     # Reply to upload with 205
     return HttpResponse(status=205)
+
+
+@login_required
+def contest_vote_entry(request, contest_slug, entry_id, vote_type, **kwargs):
+    contest = get_object_or_404(Contest, slug=contest_slug)
+    entry = get_object_or_404(Entry, id=entry_id)
+
+    # Verify that the entry belongs to the contest
+    if entry.contest != contest:
+        return HttpResponseNotFound("")
+
+    vote_count = entry.vote(user=request.user, vote_type=vote_type)
+
+    # Reply to vote with vote count
+    return JsonResponse({'vote_count': vote_count})

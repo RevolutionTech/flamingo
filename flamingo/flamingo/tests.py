@@ -14,7 +14,7 @@ import pytz
 
 from users.models import UserProfile
 from photo.models import Photo
-from contest.models import Sponsor, Contest
+from contest.models import Sponsor, Contest, Entry
 
 
 class FlamingoBaseTestCase(object):
@@ -90,6 +90,7 @@ class FlamingoBaseTestCase(object):
             email=self.USER_EMAIL,
             password=self.USER_PASSWORD
         )
+        self.user = self.user_profile.user
         _, self.photo = self.create_test_photo(
             user_profile=self.user_profile,
             title=self.CREATED_PHOTO_TITLE,
@@ -108,6 +109,10 @@ class FlamingoBaseTestCase(object):
             submission_open=self.CONTEST_SUBMISSION_OPEN,
             submission_close=self.CONTEST_SUBMISSION_CLOSE,
             end=self.CONTEST_END
+        )
+        self.entry = Entry.objects.create(
+            contest=self.contest,
+            photo=self.photo
         )
         self.client.login(
             username=self.USER_USERNAME,

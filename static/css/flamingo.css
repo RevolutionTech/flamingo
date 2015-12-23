@@ -22,3 +22,13 @@ body {
     margin-left: 20px;
     margin-right: 20px;
 }
+
+.entry-vote-button-space {
+    padding: 0;
+}
+.entry-vote-count {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 28px;
+    text-align: center;
+}
