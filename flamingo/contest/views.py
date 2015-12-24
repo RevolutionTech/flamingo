@@ -59,7 +59,7 @@ class ContestDetailsView(TemplateView):
                 'has_upvoted': entry.has_upvoted(user),
                 'has_downvoted': entry.has_downvoted(user),
             },
-            Entry.objects.filter(contest=contest)
+            Entry.objects.filter(contest=contest).order_by('?')
         )
         return context
 
