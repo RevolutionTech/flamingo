@@ -23,6 +23,10 @@ body {
     margin-right: 20px;
 }
 
+.entry {
+    padding-left: 10px;
+    padding-right: 10px;
+}
 .entry-vote-button-space {
     padding: 0;
 }
