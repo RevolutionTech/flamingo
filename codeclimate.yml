@@ -1,6 +1,0 @@
-languages:
-  JavaScript: true
-  Python: true
-
-exclude_paths:
-- "static/slick/slick.js"
