@@ -84,7 +84,7 @@ And in this file, generate a configuration similar to the following:
 
     server {
         server_name www.flamingo.photo;
-        return 301 http://flamingo.photo$request_url;
+        return 301 http://flamingo.photo$request_uri;
     }
 
     server {
