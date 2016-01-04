@@ -38,9 +38,9 @@ class ContestTestCase(FlamingoTestCase):
             name=self.CREATED_CONTEST_NAME,
             slug=self.CREATED_CONTEST_SLUG,
             description=self.CREATED_CONTEST_DESCRIPTION,
-            submission_open=self.CONTEST_SUBMISSION_OPEN,
-            submission_close=self.CONTEST_SUBMISSION_CLOSE,
-            end=self.CONTEST_END
+            submission_open=self.YESTERDAY,
+            submission_close=self.NEXT_WEEK,
+            end=self.IN_TWO_WEEKS
         )
         self.assertEquals(Contest.objects.all().count(), 1)
         contest = Contest.objects.get()
@@ -170,39 +170,6 @@ class HomeWebTestCase(FlamingoTestCase):
         self.assertEquals(status_code, 302)
         self.assertEquals(url, 'http://testserver/login/?next=/')
 
-    def testOnlyActiveContestsShowOnHome(self):
-        Contest.objects.all().delete()
-
-        yesterday = timezone.now() - datetime.timedelta(days=1)
-        next_week = yesterday + datetime.timedelta(days=7)
-        next_week_1_day = next_week + datetime.timedelta(days=1)
-        active_contest_name = 'Active contest'
-        active_contest_slug = 'active-contest'
-        Contest.objects.create(
-            sponsor=self.sponsor,
-            name=active_contest_name,
-            slug=active_contest_slug,
-            description=self.CONTEST_DESCRIPTION,
-            submission_open=yesterday,
-            submission_close=next_week,
-            end=next_week_1_day
-        )
-        ended_contest_name = 'Ended contest'
-        ended_contest_slug = 'ended-contest'
-        Contest.objects.create(
-            sponsor=self.sponsor,
-            name=ended_contest_name,
-            slug=ended_contest_slug,
-            description=self.CONTEST_DESCRIPTION,
-            submission_open=yesterday - datetime.timedelta(days=21),
-            submission_close=next_week - datetime.timedelta(days=21),
-            end=next_week_1_day - datetime.timedelta(days=21)
-        )
-
-        response = self.client.get('/')
-        self.assertTrue(active_contest_name in response.content)
-        self.assertFalse(ended_contest_name in response.content)
-
 
 class SponsorDetailsWebTestCase(FlamingoTestCase):
 
@@ -266,6 +233,9 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
         self.contest_upload_url = '/contest/upload/{contest_slug}'.format(
             contest_slug=self.contest.slug
         )
+        self.ended_contest_upload_url = '/contest/upload/{contest_slug}'.format(
+            contest_slug=self.ended_contest.slug
+        )
 
     def testSuccessfulUpload(self):
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
@@ -293,6 +263,14 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
     def testRejectNonImages(self):
         image = self.create_test_image(filename=self.PHOTO_NONIMAGE_FILENAME)
         response = self.client.post(self.contest_upload_url, {'image': image})
+        self.assertEquals(response.status_code, 400)
+
+    def testRejectSubmissionAfterEndSubmissionDate(self):
+        image = self.create_test_image(filename=self.PHOTO_FILENAME)
+        response = self.client.post(
+            self.ended_contest_upload_url,
+            {'image': image}
+        )
         self.assertEquals(response.status_code, 400)
 
 
@@ -340,9 +318,9 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
             name=self.CREATED_CONTEST_NAME,
             slug=self.CREATED_CONTEST_SLUG,
             description=self.CREATED_CONTEST_DESCRIPTION,
-            submission_open=self.CONTEST_SUBMISSION_OPEN,
-            submission_close=self.CONTEST_SUBMISSION_CLOSE,
-            end=self.CONTEST_END
+            submission_open=self.YESTERDAY,
+            submission_close=self.NEXT_WEEK,
+            end=self.IN_TWO_WEEKS
         )
         _, new_photo = self.create_test_photo(
             self.user_profile,

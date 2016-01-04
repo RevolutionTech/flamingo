@@ -10,7 +10,7 @@ import os
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, TransactionTestCase
-import pytz
+from django.utils import timezone
 
 from users.models import UserProfile
 from photo.models import Photo
@@ -19,6 +19,7 @@ from contest.models import Sponsor, Contest, Entry
 
 class FlamingoBaseTestCase(object):
 
+    NOW = timezone.now()
     USER_USERNAME = 'jsmith'
     USER_EMAIL = 'jsmith@example.com'
     USER_PASSWORD = 'abc123'
@@ -46,9 +47,13 @@ class FlamingoBaseTestCase(object):
     CONTEST_NAME = 'Contest XYZ'
     CONTEST_SLUG = 'contest-xyz'
     CONTEST_DESCRIPTION = 'Are you a master of photography? Show us!'
-    CONTEST_SUBMISSION_OPEN = datetime.datetime(2015, 1, 3, tzinfo=pytz.utc)
-    CONTEST_SUBMISSION_CLOSE = datetime.datetime(2015, 1, 17, tzinfo=pytz.utc)
-    CONTEST_END = datetime.datetime(2015, 1, 31, tzinfo=pytz.utc)
+    ENDED_CONTEST_NAME = 'Ended Contest XYZ'
+    ENDED_CONTEST_SLUG = 'ended-contest-xyz'
+    TWO_WEEKS_AGO = NOW - datetime.timedelta(days=14)
+    LAST_WEEK = NOW - datetime.timedelta(days=7)
+    YESTERDAY = NOW - datetime.timedelta(days=1)
+    NEXT_WEEK = NOW + datetime.timedelta(days=7)
+    IN_TWO_WEEKS = NOW + datetime.timedelta(days=14)
     CREATED_CONTEST_NAME = 'Created Contest'
     CREATED_CONTEST_SLUG = 'created-contest'
     CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
@@ -106,9 +111,18 @@ class FlamingoBaseTestCase(object):
             name=self.CONTEST_NAME,
             slug=self.CONTEST_SLUG,
             description=self.CONTEST_DESCRIPTION,
-            submission_open=self.CONTEST_SUBMISSION_OPEN,
-            submission_close=self.CONTEST_SUBMISSION_CLOSE,
-            end=self.CONTEST_END
+            submission_open=self.YESTERDAY,
+            submission_close=self.NEXT_WEEK,
+            end=self.IN_TWO_WEEKS
+        )
+        self.ended_contest = Contest.objects.create(
+            sponsor=self.sponsor,
+            name=self.ENDED_CONTEST_NAME,
+            slug=self.ENDED_CONTEST_SLUG,
+            description=self.CONTEST_DESCRIPTION,
+            submission_open=self.TWO_WEEKS_AGO,
+            submission_close=self.LAST_WEEK,
+            end=self.YESTERDAY
         )
         self.entry = Entry.objects.create(
             contest=self.contest,

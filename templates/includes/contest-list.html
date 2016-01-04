@@ -1,0 +1,6 @@
+{% if contests %}
+    <h3 class="subheading">{{ heading }}</h3>
+    {% for contest in contests %}
+        <li>{{ contest.sponsor.name }}: <a href="{{ contest.url }}">{{ contest.name }}</a></li>
+    {% endfor %}
+{% endif %}

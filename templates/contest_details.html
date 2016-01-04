@@ -20,11 +20,13 @@
             </div>
         {% endfor %}
     </div>
-    <h4>Submit your Photo</h4>
-    <form action="{{ contest.upload_photo_url }}" class="dropzone" enctype="multipart/form-data" method="post" id="dropzone-submit-photo">
-        {% csrf_token %}
-        <div class="dz-message">Drop images here to upload</div>
-    </form>
+    {% if submissions_open %}
+        <h4>Submit your Photo</h4>
+        <form action="{{ contest.upload_photo_url }}" class="dropzone" enctype="multipart/form-data" method="post" id="dropzone-submit-photo">
+            {% csrf_token %}
+            <div class="dz-message">Drop images here to upload</div>
+        </form>
+    {% endif %}
 {% endblock %}
 
 {% block jsincludes %}

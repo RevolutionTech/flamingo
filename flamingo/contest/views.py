@@ -24,10 +24,15 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         now = timezone.now()
-        context['contests'] = Contest.objects.filter(
+        context['contests_submission_open'] = Contest.objects.filter(
             submission_open__lte=now,
+            submission_close__gt=now
+        )
+        context['contests_voting_open'] = Contest.objects.filter(
+            submission_close__lte=now,
             end__gt=now
         )
+        context['contests_ended'] = Contest.objects.filter(end__lte=now)
         return context
 
 
@@ -51,6 +56,8 @@ class ContestDetailsView(TemplateView):
         contest = Contest.objects.get(slug=slug)
 
         context['contest'] = contest
+        context['submissions_open'] = contest.submission_close > timezone.now()
+        context['voting_open'] = contest.end > timezone.now()
         context['entries'] = map(
             lambda entry: {
                 'id': entry.id,
@@ -67,6 +74,10 @@ class ContestDetailsView(TemplateView):
 @login_required
 def contest_upload_photo(request, slug, **kwargs):
     contest = get_object_or_404(Contest, slug=slug)
+
+    # Check that submission date has not passed
+    if timezone.now() >= contest.submission_close:
+        return HttpResponseBadRequest("Photo submission to contest has ended.")
 
     # Validate image
     form = UploadPhotoForm(request.POST, request.FILES)

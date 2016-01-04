@@ -4,8 +4,7 @@
 
 {% block content %}
     <h1 class="title">flamingo.photo</h1>
-    <h3 class="subheading">Open Contests</h3>
-    {% for contest in contests %}
-        <li>{{ contest.sponsor.name }}: <a href="{{ contest.url }}">{{ contest.name }}</a></li>
-    {% endfor %}
+    {% include "includes/contest-list.html" with heading="Open Contests" contests=contests_submission_open %}
+    {% include "includes/contest-list.html" with heading="Closed Contests" contests=contests_voting_open %}
+    {% include "includes/contest-list.html" with heading="Ended Contests" contests=contests_ended %}
 {% endblock %}
