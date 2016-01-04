@@ -336,3 +336,19 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
             )
         response = self.client.post(contest_upvote_url)
         self.assertEquals(response.status_code, 404)
+
+    def testRejectVotingAfterEndDate(self):
+        _, photo = self.create_test_photo(
+            self.user_profile,
+            'Photo',
+            self.CREATED_PHOTO_FILENAME,
+            self.CREATED_PHOTO_DESCRIPTION
+        )
+        entry = Entry.objects.create(contest=self.ended_contest, photo=photo)
+        contest_upvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug=self.ended_contest.slug,
+                entry_id=entry.id
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 400)

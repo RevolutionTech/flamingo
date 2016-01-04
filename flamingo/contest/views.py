@@ -77,7 +77,9 @@ def contest_upload_photo(request, slug, **kwargs):
 
     # Check that submission date has not passed
     if timezone.now() >= contest.submission_close:
-        return HttpResponseBadRequest("Photo submission to contest has ended.")
+        return HttpResponseBadRequest(
+            "Photo submission period for contest has ended."
+        )
 
     # Validate image
     form = UploadPhotoForm(request.POST, request.FILES)
@@ -109,6 +111,10 @@ def contest_vote_entry(request, contest_slug, entry_id, vote_type, **kwargs):
     # Verify that the entry belongs to the contest
     if entry.contest != contest:
         return HttpResponseNotFound("")
+
+    # Check that contest has not already ended
+    if timezone.now() >= contest.end:
+        return HttpResponseBadRequest("Voting period for contest has ended.")
 
     vote_count = entry.vote(user=request.user, vote_type=vote_type)
 
