@@ -9,7 +9,7 @@
             <a href="#" class="button expand success {% if not entry.has_upvoted %}disabled{% endif %} upvote-button"><i class="fa fa-2x fa-thumbs-up"></i></a>
         </div>
     {% endif %}
-    <div class="{% if voting_open %}small-4{% else %}small-12{% endif %} columns entry-vote-button-space">
+    <div class="{% if can_vote %}small-4{% else %}small-12{% endif %} columns entry-vote-button-space">
         <div class="entry-vote-count">{{ entry.vote_count }}</div>
     </div>
     {% if can_vote %}
