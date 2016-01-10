@@ -7,7 +7,7 @@
 import functools
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 
 
 def redirect_authenticated(func):
@@ -17,6 +17,21 @@ def redirect_authenticated(func):
     def wrapper(request, *args, **kwargs):
         if request.user.is_authenticated():
             return HttpResponseRedirect(reverse('home'))
+        return func(request, *args, **kwargs)
+
+    return wrapper
+
+
+def authenticated_or_401(func):
+    """ If the user is not authenticated, return a 401 HTTP status code """
+
+    @functools.wraps(func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponse(
+                "You must be logged in to perform this action.",
+                status=401
+            )
         return func(request, *args, **kwargs)
 
     return wrapper

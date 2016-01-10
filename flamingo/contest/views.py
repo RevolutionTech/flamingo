@@ -4,7 +4,6 @@
 
 """
 
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, \
     HttpResponseNotFound
 from django.shortcuts import get_object_or_404
@@ -14,6 +13,7 @@ from django.utils import timezone
 from contest.forms import UploadPhotoForm
 from contest.models import Sponsor, Contest, Entry
 from photo.models import Photo
+from users.decorators import authenticated_or_401
 from users.models import UserProfile
 
 
@@ -50,28 +50,42 @@ class ContestDetailsView(TemplateView):
 
     template_name = 'contest_details.html'
 
+    def entry_to_dict(self, entry):
+        user = self.request.user
+        if user.is_authenticated():
+            has_upvoted = entry.has_upvoted(user)
+            has_downvoted = entry.has_downvoted(user)
+        else:
+            has_upvoted = False
+            has_downvoted = False
+        return {
+            'id': entry.id,
+            'photo': entry.photo,
+            'vote_count': entry.vote_count(),
+            'has_upvoted': has_upvoted,
+            'has_downvoted': has_downvoted,
+        }
+
     def get_context_data(self, slug, **kwargs):
         context = super(ContestDetailsView, self).get_context_data(**kwargs)
-        user = self.request.user
+
+        user_authenticated = self.request.user.is_authenticated()
         contest = Contest.objects.get(slug=slug)
 
         context['contest'] = contest
-        context['submissions_open'] = contest.submission_close > timezone.now()
-        context['voting_open'] = contest.end > timezone.now()
+        context['user_authenticated'] = user_authenticated
+        context['can_submit_photo'] = user_authenticated and \
+            contest.submission_close > timezone.now()
+        context['can_vote'] = user_authenticated and \
+            contest.end > timezone.now()
         context['entries'] = map(
-            lambda entry: {
-                'id': entry.id,
-                'photo': entry.photo,
-                'vote_count': entry.vote_count(),
-                'has_upvoted': entry.has_upvoted(user),
-                'has_downvoted': entry.has_downvoted(user),
-            },
+            self.entry_to_dict,
             Entry.objects.filter(contest=contest).order_by('?')
         )
         return context
 
 
-@login_required
+@authenticated_or_401
 def contest_upload_photo(request, slug, **kwargs):
     contest = get_object_or_404(Contest, slug=slug)
 
@@ -103,7 +117,7 @@ def contest_upload_photo(request, slug, **kwargs):
     return HttpResponse(status=205)
 
 
-@login_required
+@authenticated_or_401
 def contest_vote_entry(request, contest_slug, entry_id, vote_type, **kwargs):
     contest = get_object_or_404(Contest, slug=contest_slug)
     entry = get_object_or_404(Entry, id=entry_id)

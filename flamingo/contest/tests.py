@@ -162,13 +162,9 @@ class HomeWebTestCase(FlamingoTestCase):
     def testHomePageRenders(self):
         response = self.client.get('/')
         self.assertEquals(response.status_code, 200)
-
-    def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        response = self.client.get('/', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/login/?next=/')
+        response = self.client.get('/')
+        self.assertEquals(response.status_code, 200)
 
 
 class SponsorDetailsWebTestCase(FlamingoTestCase):
@@ -180,21 +176,11 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
         )
 
     def testSponsorDetailsPageRenders(self):
-        sponsor_slug = self.sponsor.slug
         response = self.client.get(self.sponsor_details_url)
         self.assertEquals(response.status_code, 200)
-
-    def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        response = self.client.get(self.sponsor_details_url, follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(
-            url,
-            'http://testserver/login/?next={sponsor_details_url}'.format(
-                sponsor_details_url=self.sponsor_details_url
-            )
-        )
+        response = self.client.get(self.sponsor_details_url)
+        self.assertEquals(response.status_code, 200)
 
 
 class ContestDetailsWebTestCase(FlamingoTestCase):
@@ -206,21 +192,21 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
         )
 
     def testContestDetailsPageRenders(self):
-        contest_slug = self.contest.slug
         response = self.client.get(self.contest_details_url)
         self.assertEquals(response.status_code, 200)
+        self.assertTrue('dropzone-submit-photo' in response.content)
+        self.assertTrue('upvote-button' in response.content)
+        self.assertTrue('downvote-button' in response.content)
+        self.assertFalse('login-to-vote' in response.content)
 
-    def testRedirectsUnauthenticatedUsersToLogin(self):
+    def testUnauthenticatedCannotVoteOrUpload(self):
         self.client.logout()
-        response = self.client.get(self.contest_details_url, follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(
-            url,
-            'http://testserver/login/?next={contest_details_url}'.format(
-                contest_details_url=self.contest_details_url
-            )
-        )
+        response = self.client.get(self.contest_details_url)
+        self.assertEquals(response.status_code, 200)
+        self.assertFalse('dropzone-submit-photo' in response.content)
+        self.assertFalse('upvote-button' in response.content)
+        self.assertFalse('downvote-button' in response.content)
+        self.assertTrue('login-to-vote' in response.content)
 
 
 class ContestUploadPhotoTestCase(FlamingoTestCase):
@@ -241,6 +227,12 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
         response = self.client.post(self.contest_upload_url, {'image': image})
         self.assertEquals(response.status_code, 205)
+
+    def testRejectUnauthenticatedUsers(self):
+        self.client.logout()
+        image = self.create_test_image(filename=self.PHOTO_FILENAME)
+        response = self.client.post(self.contest_upload_url, {'image': image})
+        self.assertEquals(response.status_code, 401)
 
     def testRejectInvalidContest(self):
         invalid_contest_upload_url = '/contest/upload/{contest_slug}'.format(
@@ -293,6 +285,16 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
             )
         response = self.client.post(contest_downvote_url)
         self.assertEquals(response.status_code, 200)
+
+    def testRejectUnauthenticatedUsers(self):
+        self.client.logout()
+        contest_upvote_url = \
+            '/contest/details/{contest_slug}/entry/{entry_id}/upvote/'.format(
+                contest_slug=self.contest.slug,
+                entry_id=self.entry.id
+            )
+        response = self.client.post(contest_upvote_url)
+        self.assertEquals(response.status_code, 401)
 
     def testRejectInvalidContest(self):
         contest_upvote_url = \

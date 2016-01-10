@@ -20,12 +20,15 @@
             </div>
         {% endfor %}
     </div>
-    {% if submissions_open %}
+    {% if can_submit_photo %}
         <h4>Submit your Photo</h4>
         <form action="{{ contest.upload_photo_url }}" class="dropzone" enctype="multipart/form-data" method="post" id="dropzone-submit-photo">
             {% csrf_token %}
             <div class="dz-message">Drop images here to upload</div>
         </form>
+    {% endif %}
+    {% if not user_authenticated %}
+        <h4 class="login-to-vote"><a href="{% url 'login' %}">Login</a> to vote and submit your photo!</h4>
     {% endif %}
 {% endblock %}
 
