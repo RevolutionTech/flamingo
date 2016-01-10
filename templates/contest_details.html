@@ -30,6 +30,12 @@
     {% if not user_authenticated %}
         <h4 class="login-to-vote"><a href="{% url 'login' %}">Login</a> to vote and submit your photo!</h4>
     {% endif %}
+    <div id="error-modal" class="reveal-modal" data-reveal aria-labelledby="error" aria-hidden="true" role="dialog">
+      <h2 class="error-title">Oops! An error occurred.</h2>
+      <p class="error-type lead"></p>
+      <p class="error-message">An unknown error occurred.</p>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
 {% endblock %}
 
 {% block jsincludes %}

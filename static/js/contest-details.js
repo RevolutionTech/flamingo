@@ -20,13 +20,39 @@ $(document).ready(function(){
         autoplay: true,
         lazyLoad: 'ondemand'
     });
+
+    function showErrorModal(status_text, response_text) {
+        $('#error-modal > .error-type').text(status_text);
+        $('#error-modal > .error-message').text(response_text);
+        $('#error-modal').foundation('reveal', 'open');
+    }
+
+    function error_occurred_during_uploading(files) {
+        var error_occurred = false;
+        $.each(files, function(i, file) {
+            if (file.status === Dropzone.ERROR) {
+                error_occurred = true;
+                return false;
+            }
+        });
+        return error_occurred;
+    }
     Dropzone.options.dropzoneSubmitPhoto = {
         paramName: "image",
         maxFilesize: 2, // MB
         init: function() {
-            this.on("queuecomplete", function(file) {
-                // Refresh the page to see uploaded contents
-                location.reload();
+            this.on("error", function(file, errorMessage, serverResponse) {
+                if (typeof serverResponse === 'undefined') {
+                    showErrorModal("Upload Error", errorMessage);
+                } else {
+                    showErrorModal(serverResponse['status'] + " " + serverResponse['statusText'], errorMessage);
+                }
+            });
+            this.on("queuecomplete", function() {
+                // Refresh the page to see uploaded contents, if no errors occurred
+                if (!error_occurred_during_uploading(this.files)) {
+                    location.reload();
+                }
             });
         }
     };
@@ -50,16 +76,26 @@ $(document).ready(function(){
         }
         var vote_url = "/contest/details/" + contest_slug + "/entry/" + entry_id + "/" + vote_type + "/";
 
-        // Disable other voting button
-        $(this).parents('.row').find('.' + other_vote_type + '-button').addClass('disabled');
+        // Find voting buttons
+        var this_button = $(this);
+        var other_voting_button = $(this).parents('.row').find('.' + other_vote_type + '-button');
 
-        // Enable selected voting button
-        $(this).removeClass('disabled');
-
-        // Make the request and update voting count
+        // Make the request
         var entry_vote_count = $(this).parents('.row').find('.entry-vote-count');
-        jQuery.post(vote_url, {}, function(resp) {
-            entry_vote_count.text(resp['vote_count']);
-        });
+        jQuery.post(vote_url, {})
+            .done(function(resp) {
+                // Disable other voting button
+                other_voting_button.addClass('disabled');
+
+                // Enable selected voting button
+                this_button.removeClass('disabled');
+
+                // Update voting count
+                entry_vote_count.text(resp['vote_count']);
+            })
+            .fail(function(resp) {
+                // Show the error from the server
+                showErrorModal(resp['status'] + " " + resp['statusText'], resp['responseText']);
+            });
     });
 });
