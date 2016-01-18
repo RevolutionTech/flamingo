@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^contest/upload/(?P<slug>[\w_-]+)/?$', contest_upload_photo, name='contest_upload_photo'),
 
     url(r'^profile/?$', login_required(ProfileView.as_view()), name='profile'),
-    url(r'^/?$', HomeView.as_view(), name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
 ]
 
 # Add media folder to urls when DEBUG = True

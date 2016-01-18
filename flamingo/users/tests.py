@@ -147,14 +147,14 @@ class RegisterWebTestCase(FlamingoTestCase):
         response = self.client.post('/register', payload, follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(url, '/')
         self.assertEquals(UserProfile.objects.all().count(), 1)
 
     def testRedirectsAuthenticatedUsersToHome(self):
         response = self.client.get('/register', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(url, '/')
 
 
 class LoginFormTestCase(FlamingoTestCase):
@@ -216,7 +216,7 @@ class LoginWebTestCase(FlamingoTestCase):
         response = self.client.post('/login', payload, follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(url, '/')
 
     def testUserLogsInWithEmail(self):
         self.client.logout()
@@ -228,13 +228,13 @@ class LoginWebTestCase(FlamingoTestCase):
         response = self.client.post('/login', payload, follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(url, '/')
 
     def testRedirectsAuthenticatedUsersToHome(self):
         response = self.client.get('/login', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/')
+        self.assertEquals(url, '/')
 
 
 class LogoutWebTestCase(FlamingoTestCase):
@@ -243,14 +243,14 @@ class LogoutWebTestCase(FlamingoTestCase):
         response = self.client.get('/logout', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/login')
+        self.assertEquals(url, '/login')
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
         response = self.client.get('/logout', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/login')
+        self.assertEquals(url, '/login')
 
 
 class ProfileWebTestCase(FlamingoTestCase):
@@ -264,4 +264,4 @@ class ProfileWebTestCase(FlamingoTestCase):
         response = self.client.get('/profile', follow=True)
         url, status_code = response.redirect_chain[0]
         self.assertEquals(status_code, 302)
-        self.assertEquals(url, 'http://testserver/login/?next=/profile')
+        self.assertEquals(url, '/login/?next=/profile')
