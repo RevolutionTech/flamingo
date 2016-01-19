@@ -7,3 +7,4 @@ Pillow==3.1.0
 django-classbasedsettings==1.4.0
 sorl-thumbnail==12.3
 python-coveralls==2.6.0
+raven==5.10.0

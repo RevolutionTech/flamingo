@@ -7,6 +7,7 @@
 import os
 
 from cbsettings import DjangoDefaults
+import raven
 
 
 class BaseSettings(DjangoDefaults):
@@ -25,6 +26,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
         'users',
         'photo',
@@ -93,3 +95,19 @@ class BaseSettings(DjangoDefaults):
 
     # Authentication
     LOGIN_URL = '/login/'
+
+    # Sentry
+    RAVEN_PUBLIC_KEY = '7404ed97fa2044418aa231daa72658fc'
+    RAVEN_SECRET_KEY = 'FAKESECRET' # Overriden in prod.py
+    RAVEN_PROJECT_ID = '64150'
+
+    @property
+    def RAVEN_CONFIG(self):
+        return {
+            'dsn': 'https://{public_key}:{secret_key}@app.getsentry.com/{project_id}'.format(
+                public_key=self.RAVEN_PUBLIC_KEY,
+                secret_key=self.RAVEN_SECRET_KEY,
+                project_id=self.RAVEN_PROJECT_ID,
+            ),
+            'release': raven.fetch_git_sha(self.TOP_DIR),
+        }

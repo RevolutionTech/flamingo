@@ -68,6 +68,7 @@ In your production environment, you'll need to create a prod settings configurat
     class ProdSettings(DevSettings):
         DEBUG = False
         ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
+        RAVEN_SECRET_KEY = 'abc123' # Sentry DSN looks like '{PROTOCOL}://{PUBLIC_KEY}:{SECRET_KEY}@{HOST}/{PATH}{PROJECT_ID}'
 
 When the `prod.py` file is present, the server will automatically use those settings over `dev.py`.
 
