@@ -98,7 +98,7 @@ class BaseSettings(DjangoDefaults):
 
     # Sentry
     RAVEN_PUBLIC_KEY = '7404ed97fa2044418aa231daa72658fc'
-    RAVEN_SECRET_KEY = 'FAKESECRET' # Overriden in prod.py
+    RAVEN_SECRET_KEY = 'FAKESECRET' # Overridden in prod.py
     RAVEN_PROJECT_ID = '64150'
 
     @property

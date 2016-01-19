@@ -23,7 +23,7 @@ class UserProfile(models.Model):
         return unicode(self.user)
 
     def full_name(self):
-        return "{first} {last}".format(
+        return u"{first} {last}".format(
             first=self.user.first_name,
             last=self.user.last_name
         ).strip()
