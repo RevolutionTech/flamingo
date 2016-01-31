@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -18,7 +19,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=30)),
                 ('img', models.ImageField(upload_to=b'photo')),
                 ('description', models.TextField(null=True, blank=True)),
-                ('user_profile', models.ForeignKey(to='users.UserProfile')),
+                ('user_profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.UserProfile')),
             ],
         ),
     ]

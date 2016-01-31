@@ -14,7 +14,7 @@ from users.managers import UserProfileManager
 
 class UserProfile(models.Model):
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)
 
     objects = UserProfileManager()

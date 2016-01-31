@@ -31,7 +31,7 @@ class Sponsor(models.Model):
 
 class Contest(models.Model):
 
-    sponsor = models.ForeignKey(Sponsor)
+    sponsor = models.ForeignKey(Sponsor, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
     description = models.TextField(null=True, blank=True)
@@ -65,8 +65,8 @@ def contest_pre_save(sender, instance, *args, **kwargs):
 
 class Entry(models.Model):
 
-    contest = models.ForeignKey(Contest)
-    photo = models.ForeignKey(Photo)
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Entries"
@@ -116,8 +116,8 @@ class Vote(models.Model):
         (UPVOTE, 'Upvote'),
     )
 
-    entry = models.ForeignKey(Entry)
-    user = models.ForeignKey(User)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     vote_type = models.PositiveSmallIntegerField(
         choices=VOTE_CHOICES,
         db_index=True
