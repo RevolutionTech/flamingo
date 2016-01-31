@@ -96,6 +96,9 @@ class FlamingoBaseTestCase(object):
             password=self.USER_PASSWORD
         )
         self.user = self.user_profile.user
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.save()
         _, self.photo = self.create_test_photo(
             user_profile=self.user_profile,
             title=self.CREATED_PHOTO_TITLE,
@@ -155,3 +158,24 @@ class FlamingoGeneralTestCase(FlamingoTestCase):
     def testCreateTestPhotoMissing(self):
         with self.assertRaises(IOError):
             self.create_test_image('missing.jpg')
+
+
+class AdminHomeWebTestCase(FlamingoTestCase):
+
+    def testAdminHomePageRenders(self):
+        response = self.client.get('/admin/')
+        self.assertEquals(response.status_code, 200)
+
+
+class AdminLoginWebTestCase(FlamingoTestCase):
+
+    @staticmethod
+    def strip_query_params(url):
+        return url.split('?')[0]
+
+    def testAdminLoginPageRenders(self):
+        self.client.logout()
+        response = self.client.get('/admin/', follow=True)
+        url, status_code = response.redirect_chain[0]
+        self.assertEquals(status_code, 302)
+        self.assertEquals(self.strip_query_params(url), '/admin/login/')

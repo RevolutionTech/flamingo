@@ -157,6 +157,58 @@ class VoteTestCase(FlamingoTestCase):
         self.assertEquals(vote_count, -1)
 
 
+class ContestAdminWebTestCase(FlamingoTestCase):
+
+    def testContestAppAdminPageRenders(self):
+        response = self.client.get('/admin/contest/')
+        self.assertEquals(response.status_code, 200)
+
+    def testSponsorChangelistAdminPageRenders(self):
+        response = self.client.get('/admin/contest/sponsor/')
+        self.assertEquals(response.status_code, 200)
+
+    def testSponsorAddAdminPageRenders(self):
+        response = self.client.get('/admin/contest/sponsor/add/')
+        self.assertEquals(response.status_code, 200)
+
+    def testSponsorChangeAdminPageRenders(self):
+        url = '/admin/contest/sponsor/{sponsor_id}/change/'.format(
+            sponsor_id=self.sponsor.id
+        )
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def testContestChangelistAdminPageRenders(self):
+        response = self.client.get('/admin/contest/contest/')
+        self.assertEquals(response.status_code, 200)
+
+    def testContestAddAdminPageRenders(self):
+        response = self.client.get('/admin/contest/contest/add/')
+        self.assertEquals(response.status_code, 200)
+
+    def testContestChangeAdminPageRenders(self):
+        url = '/admin/contest/contest/{contest_id}/change/'.format(
+            contest_id=self.contest.id
+        )
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def testEntryChangelistAdminPageRenders(self):
+        response = self.client.get('/admin/contest/entry/')
+        self.assertEquals(response.status_code, 200)
+
+    def testEntryAddAdminPageRenders(self):
+        response = self.client.get('/admin/contest/entry/add/')
+        self.assertEquals(response.status_code, 200)
+
+    def testEntryChangeAdminPageRenders(self):
+        url = '/admin/contest/entry/{entry_id}/change/'.format(
+            entry_id=self.entry.id
+        )
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+
 class HomeWebTestCase(FlamingoTestCase):
 
     def testHomePageRenders(self):

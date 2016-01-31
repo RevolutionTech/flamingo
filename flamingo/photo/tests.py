@@ -46,3 +46,25 @@ class PhotoTestCase(FlamingoTestCase):
         stored_image = Image.open(photo.img)
         self.assertEquals(stored_image.width, original_image.width)
         self.assertEquals(stored_image.height, original_image.height)
+
+
+class PhotoAdminWebTestCase(FlamingoTestCase):
+
+    def testPhotoAppAdminPageRenders(self):
+        response = self.client.get('/admin/photo/')
+        self.assertEquals(response.status_code, 200)
+
+    def testPhotoChangelistAdminPageRenders(self):
+        response = self.client.get('/admin/photo/photo/')
+        self.assertEquals(response.status_code, 200)
+
+    def testPhotoAddAdminPageRenders(self):
+        response = self.client.get('/admin/photo/photo/add/')
+        self.assertEquals(response.status_code, 200)
+
+    def testPhotoChangeAdminPageRenders(self):
+        url = '/admin/photo/photo/{photo_id}/change/'.format(
+            photo_id=self.photo.id
+        )
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)

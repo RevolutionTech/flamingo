@@ -86,6 +86,28 @@ class UserTestCase(FlamingoTransactionTestCase):
             )
 
 
+class UserAdminWebTestCase(FlamingoTestCase):
+
+    def testUserAppAdminPageRenders(self):
+        response = self.client.get('/admin/users/')
+        self.assertEquals(response.status_code, 200)
+
+    def testUserProfileChangelistAdminPageRenders(self):
+        response = self.client.get('/admin/users/userprofile/')
+        self.assertEquals(response.status_code, 200)
+
+    def testUserProfileAddAdminPageRenders(self):
+        response = self.client.get('/admin/users/userprofile/add/')
+        self.assertEquals(response.status_code, 200)
+
+    def testUserProfileChangeAdminPageRenders(self):
+        url = '/admin/users/userprofile/{userprofile_id}/change/'.format(
+            userprofile_id=self.user_profile.id
+        )
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+
 class RegisterFormTestCase(FlamingoTestCase):
 
     def testUsernameAlreadyTaken(self):
