@@ -7,6 +7,7 @@
 import os
 
 from cbsettings import DjangoDefaults
+import dj_database_url
 
 
 class BaseSettings(DjangoDefaults):
@@ -69,14 +70,10 @@ class BaseSettings(DjangoDefaults):
         }
     }
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get('FLAMINGO_DATABASE_NAME', 'flamingo'),
-            'USER': os.environ.get('FLAMINGO_DATABASE_USER', 'postgres'),
-            'PASSWORD': os.environ.get('FLAMINGO_DATABASE_PASSWORD', ''),
-            'HOST': os.environ.get('FLAMINGO_DATABASE_HOST', 'localhost'),
-            'PORT': os.environ.get('FLAMINGO_DATABASE_PORT', ''),
-        }
+        'default': dj_database_url.config(
+            env='FLAMINGO_DATABASE_URL',
+            default='postgres://postgres@localhost/flamingo'
+        ),
     }
 
     # Internationalization
