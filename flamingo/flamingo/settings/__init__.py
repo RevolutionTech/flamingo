@@ -9,19 +9,10 @@ import os
 
 from cbsettings import switcher
 
+from flamingo.settings.base import BaseSettings
+from flamingo.settings.prod import ProdSettings
 
-SETTINGS_DIR = os.path.dirname(__file__)
 
-dev_settings_exists = os.path.isfile(os.path.join(SETTINGS_DIR, 'dev.py'))
-prod_settings_exists = os.path.isfile(os.path.join(SETTINGS_DIR, 'prod.py'))
-
-from flamingo.settings.travis import TravisSettings
-switcher.register(TravisSettings, 'TRAVIS' in os.environ)
-
-if dev_settings_exists:
-    from flamingo.settings.dev import DevSettings
-    switcher.register(DevSettings, dev_settings_exists and not prod_settings_exists)
-
-if prod_settings_exists:
-    from flamingo.settings.prod import ProdSettings
-    switcher.register(ProdSettings, prod_settings_exists)
+flamingo_env = os.environ.get('FLAMINGO_ENV', 'DEV')
+switcher.register(BaseSettings, flamingo_env == 'DEV')
+switcher.register(ProdSettings, flamingo_env == 'PROD')

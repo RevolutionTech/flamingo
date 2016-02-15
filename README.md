@@ -36,24 +36,14 @@ Then in your virtual environment, you will need to install Python dependencies s
 
 ### Configuration
 
-Next we will need to create a file in the settings directory called `dev.py`. This is where we will store all of the settings that are specific to your dev instance of Flamingo. Most of these settings should be only known to you. Your file should subclass BaseSettings from `base.py` and then define a secret key and the database credentials. Your `dev.py` file might look something like:
+Next we will need to set up some environment variables for your dev instance of Flamingo. These values should be kept secret. Add a secret key and the database password to your `~/.bashrc` file:
 
-    from flamingo.settings.base import BaseSettings
+    export FLAMINGO_SECRET_KEY=-3f5yh\&\(s5%9uigtx^yn=t_woj0@90__fr\!t2b*96f5xoyzb%b
+    export FLAMINGO_DATABASE_PASSWORD=abc123
 
-    class DevSettings(BaseSettings):
-        SECRET_KEY = '-3f5yh&(s5%9uigtx^yn=t_woj0@90__fr!t2b*96f5xoyzb%b'
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'flamingo',
-                'USER': 'postgres',
-                'PASSWORD': 'abc123',
-                'HOST': 'localhost',
-                'PORT': '5432',
-            }
-        }
+Of course you should [generate your own secret key](http://stackoverflow.com/a/16630719) and use a more secure password for your database. Keep in mind that some special characters in the secret key need to be escaped. Then source your ~/.bashrc file to set these environment variables:
 
-Of course you should [generate your own secret key](http://stackoverflow.com/a/16630719) and use a more secure password for your database. If you like, you can override more Django settings here. If you do not create this file, you will get a `cbsettings.exceptions.NoMatchingSettings` exception when starting the server.
+    source ~/.bashrc
 
 With everything installed and all files in place, you may now create the database tables. You can do this with:
 
@@ -61,16 +51,18 @@ With everything installed and all files in place, you may now create the databas
 
 ### Deployment
 
-In your production environment, you'll need to create a prod settings configuration `prod.py`, similar to your `dev.py` file. It may be best to subclass the DevSettings class you created, in order to get something like this:
+In your production environment, you will need to provide two additional environment variables. Add the following to your `~/.bashrc` file:
 
-    from flamingo.settings.dev import DevSettings
+    export FLAMINGO_ENV=PROD
+    export FLAMINGO_RAVEN_SECRET_KEY=abc123
 
-    class ProdSettings(DevSettings):
-        DEBUG = False
-        ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
-        RAVEN_SECRET_KEY = 'abc123' # Sentry DSN looks like '{PROTOCOL}://{PUBLIC_KEY}:{SECRET_KEY}@{HOST}/{PATH}{PROJECT_ID}'
+For reference, the format of the Sentry DSN is as follows:
 
-When the `prod.py` file is present, the server will automatically use those settings over `dev.py`.
+    {PROTOCOL}://{PUBLIC_KEY}:{SECRET_KEY}@{HOST}/{PATH}{PROJECT_ID}
+
+Then source the `~/.bashrc` file to set this environment variable:
+
+    source ~/.bashrc
 
 Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
 

@@ -7,13 +7,13 @@
 import os
 
 from cbsettings import DjangoDefaults
-import raven
 
 
 class BaseSettings(DjangoDefaults):
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     TOP_DIR = os.path.dirname(BASE_DIR)
+    SECRET_KEY = os.environ['FLAMINGO_SECRET_KEY']
 
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -71,11 +71,11 @@ class BaseSettings(DjangoDefaults):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'flamingo',
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '',
+            'NAME': os.environ.get('FLAMINGO_DATABASE_NAME', 'flamingo'),
+            'USER': os.environ.get('FLAMINGO_DATABASE_USER', 'postgres'),
+            'PASSWORD': os.environ.get('FLAMINGO_DATABASE_PASSWORD', ''),
+            'HOST': os.environ.get('FLAMINGO_DATABASE_HOST', 'localhost'),
+            'PORT': os.environ.get('FLAMINGO_DATABASE_PORT', ''),
         }
     }
 
@@ -95,19 +95,3 @@ class BaseSettings(DjangoDefaults):
 
     # Authentication
     LOGIN_URL = '/login/'
-
-    # Sentry
-    RAVEN_PUBLIC_KEY = '7404ed97fa2044418aa231daa72658fc'
-    RAVEN_SECRET_KEY = 'FAKESECRET' # Overridden in prod.py
-    RAVEN_PROJECT_ID = '64150'
-
-    @property
-    def RAVEN_CONFIG(self):
-        return {
-            'dsn': 'https://{public_key}:{secret_key}@app.getsentry.com/{project_id}'.format(
-                public_key=self.RAVEN_PUBLIC_KEY,
-                secret_key=self.RAVEN_SECRET_KEY,
-                project_id=self.RAVEN_PROJECT_ID,
-            ),
-            'release': raven.fetch_git_sha(self.TOP_DIR),
-        }
