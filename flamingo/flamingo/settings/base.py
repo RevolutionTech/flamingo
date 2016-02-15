@@ -85,6 +85,8 @@ class BaseSettings(DjangoDefaults):
     # Static files (CSS, JavaScript, Images) and Media
     MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
     MEDIA_URL = '/media/'
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    STATIC_ROOT = os.path.join(TOP_DIR, 'staticfiles')
     STATICFILES_DIRS = (
         os.path.join(TOP_DIR, 'static'),
     )

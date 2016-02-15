@@ -5,6 +5,7 @@ media/
 # Compiled source #
 ###################
 *.pyc
+staticfiles/
 
 # OS generated files #
 ######################
