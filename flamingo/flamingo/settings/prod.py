@@ -8,7 +8,7 @@ from flamingo.settings.base import BaseSettings
 class ProdSettings(BaseSettings):
 
     DEBUG = False
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
+    ALLOWED_HOSTS = ['*',] # Heroku handles this under the hood
 
     # Sentry
     # @property
