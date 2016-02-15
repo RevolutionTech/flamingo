@@ -90,12 +90,6 @@ And in this file, generate a configuration similar to the following:
         access_log off;
         client_max_body_size 3M;
 
-        location /static/admin/ {
-            alias /home/lucas/.virtualenvs/flamingo/lib/python2.7/site-packages/django/contrib/admin/static/admin/;
-        }
-        location /static/ {
-            alias /home/lucas/flamingo/static/;
-        }
         location /media/ {
             alias /home/lucas/flamingo/media/;
         }
