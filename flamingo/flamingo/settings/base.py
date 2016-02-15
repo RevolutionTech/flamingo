@@ -27,7 +27,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        # 'raven.contrib.django.raven_compat',
+        'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
         'users',
         'photo',
