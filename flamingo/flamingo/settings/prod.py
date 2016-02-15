@@ -1,7 +1,5 @@
 import os
 
-import raven
-
 from flamingo.settings.base import BaseSettings
 
 
