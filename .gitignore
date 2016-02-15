@@ -15,3 +15,7 @@ media/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Secure Files #
+################
+flamingo/flamingo/settings/secrets

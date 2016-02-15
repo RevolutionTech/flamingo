@@ -51,18 +51,17 @@ With everything installed and all files in place, you may now create the databas
 
 ### Deployment
 
-In your production environment, you will need to provide two additional environment variables. Add the following to your `~/.bashrc` file:
+In your production environment, you will need to create a directory under `flamingo/flamingo/settings` called `secrets` and place all of the flamingo environment variables in that directory, where the key of the variable is the name of the file and the value of the variable is the content in the file. In addition to the environment variables for the development environment, you will also need to provide two additional environment variables. `FLAMINGO_ENV` should be set to `PROD` and `FLAMINGO_RAVEN_SECRET_KEY` should be the secret key in the Sentry DSN:
 
-    export FLAMINGO_ENV=PROD
-    export FLAMINGO_RAVEN_SECRET_KEY=abc123
+    cd flamingo/settings
+    mkdir secrets
+    cd secrets
+    echo "PROD" > FLAMINGO_ENV
+    echo "abc123" > FLAMINGO_RAVEN_SECRET_KEY
 
 For reference, the format of the Sentry DSN is as follows:
 
     {PROTOCOL}://{PUBLIC_KEY}:{SECRET_KEY}@{HOST}/{PATH}{PROJECT_ID}
-
-Then source the `~/.bashrc` file to set this environment variable:
-
-    source ~/.bashrc
 
 Flamingo uses Gunicorn with [runit](http://smarden.org/runit/) and [Nginx](http://nginx.org/). You can install them with the following:
 
@@ -132,7 +131,7 @@ In this file, create a script similar to the following:
     if [ -f $PID ]; then rm $PID; fi
 
     cd $ROOT
-    exec $GUNICORN -c $ROOT/flamingo/gunicorn.py --pid=$PID $APP
+    exec chpst -e $ROOT/flamingo/settings/secrets $GUNICORN -c $ROOT/flamingo/gunicorn.py --pid=$PID $APP
 
 Then change the permissions on the file to be executable and symlink the project to /etc/service:
 
