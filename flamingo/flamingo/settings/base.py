@@ -72,7 +72,8 @@ class BaseSettings(DjangoDefaults):
     DATABASES = {
         'default': dj_database_url.config(
             env='FLAMINGO_DATABASE_URL',
-            default='postgres://postgres@localhost/flamingo'
+            default='postgres://postgres@localhost/flamingo',
+            conn_max_age=500
         ),
     }
 
