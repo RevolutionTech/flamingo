@@ -49,9 +49,10 @@ Of course you should [generate your own secret key](http://stackoverflow.com/a/1
 
     source ~/.bashrc
 
-With everything installed and all files in place, you may now create the database tables. You can do this with:
+With everything installed and all files in place, you may now create the database tables and collect static files. You can do this with:
 
     python manage.py migrate
+    python manage.py collectstatic
 
 ### Deployment
 
