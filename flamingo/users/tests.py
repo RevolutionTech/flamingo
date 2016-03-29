@@ -110,7 +110,7 @@ class RegisterFormTestCase(FlamingoTestCase):
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('username' in form.errors)
+        self.assertIn('username', form.errors)
 
     def testEmailAlreadyRegistered(self):
         form_data = {
@@ -121,7 +121,7 @@ class RegisterFormTestCase(FlamingoTestCase):
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('email' in form.errors)
+        self.assertIn('email', form.errors)
 
     def testPasswordsDoNotMatch(self):
         form_data = {
@@ -132,10 +132,11 @@ class RegisterFormTestCase(FlamingoTestCase):
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('__all__' in form.errors)
+        self.assertIn('__all__', form.errors)
         self.assertEquals(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
-        self.assertTrue('Password' in error and 'not match' in error)
+        self.assertIn('Password', error)
+        self.assertIn('not match', error)
 
 
 class RegisterWebTestCase(FlamingoTestCase):
@@ -175,7 +176,7 @@ class LoginFormTestCase(FlamingoTestCase):
         }
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('__all__' in form.errors)
+        self.assertIn('__all__', form.errors)
         self.assertEquals(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
         self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
@@ -187,7 +188,7 @@ class LoginFormTestCase(FlamingoTestCase):
         }
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('__all__' in form.errors)
+        self.assertIn('__all__', form.errors)
         self.assertEquals(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
         self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
@@ -199,7 +200,7 @@ class LoginFormTestCase(FlamingoTestCase):
         }
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertTrue('__all__' in form.errors)
+        self.assertIn('__all__', form.errors)
         self.assertEquals(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
         self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)

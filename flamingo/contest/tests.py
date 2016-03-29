@@ -220,18 +220,26 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
 
     def testContestDetailsPageRenders(self):
         response = self.assertResponseRenders(self.contest_details_url)
-        self.assertTrue('dropzone-submit-photo' in response.content)
-        self.assertTrue('upvote-button' in response.content)
-        self.assertTrue('downvote-button' in response.content)
-        self.assertFalse('login-to-vote' in response.content)
+        selectors = [
+            'dropzone-submit-photo',
+            'upvote-button',
+            'downvote-button',
+        ]
+        for selector in selectors:
+            self.assertIn(selector, response.content)
+        self.assertNotIn('login-to-vote', response.content)
 
     def testUnauthenticatedCannotVoteOrUpload(self):
         self.client.logout()
         response = self.assertResponseRenders(self.contest_details_url)
-        self.assertFalse('dropzone-submit-photo' in response.content)
-        self.assertFalse('upvote-button' in response.content)
-        self.assertFalse('downvote-button' in response.content)
-        self.assertTrue('login-to-vote' in response.content)
+        selectors = [
+            'dropzone-submit-photo',
+            'upvote-button',
+            'downvote-button',
+        ]
+        for selector in selectors:
+            self.assertNotIn(selector, response.content)
+        self.assertIn('login-to-vote', response.content)
 
 
 class ContestUploadPhotoTestCase(FlamingoTestCase):
