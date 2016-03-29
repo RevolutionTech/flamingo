@@ -30,9 +30,9 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.staticfiles',
         'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
-        'users',
-        'photo',
-        'contest',
+        'users.apps.UsersConfig',
+        'photo.apps.PhotoConfig',
+        'contest.apps.ContestConfig',
     )
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
