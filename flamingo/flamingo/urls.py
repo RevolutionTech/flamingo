@@ -5,7 +5,7 @@
 """
 
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.views.static import serve
@@ -18,7 +18,7 @@ from users.views import RegisterView, LoginView, logout, ProfileView
 
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^register/?$', redirect_authenticated(RegisterView.as_view()), name='register'),
     url(r'^login/?$', redirect_authenticated(LoginView.as_view()), name='login'),
     url(r'^logout/?$', logout, name='logout'),
