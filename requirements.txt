@@ -2,7 +2,6 @@ gunicorn==19.4.5
 Django==1.9.4
 python-memcached==1.57
 psycopg2==2.6.1
-pytz==2015.7
 whitenoise==2.0.6
 Pillow==3.1.1
 django-classbasedsettings==1.5.0
