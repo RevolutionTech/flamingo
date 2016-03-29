@@ -9,12 +9,12 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 
 import os
 
-import cbsettings
 from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
+
+import cbsettings
 
 
 os.environ.setdefault("DJANGO_SETTINGS_FACTORY", "flamingo.settings")
 cbsettings.configure('flamingo.settings.switcher')
 
-application = DjangoWhiteNoise(get_wsgi_application())
+application = get_wsgi_application()

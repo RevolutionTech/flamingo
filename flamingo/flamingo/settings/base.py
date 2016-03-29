@@ -26,6 +26,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
+        'whitenoise.runserver_nostatic',
         'django.contrib.staticfiles',
         'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
@@ -42,6 +43,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'django.middleware.security.SecurityMiddleware',
+        'whitenoise.middleware.WhiteNoiseMiddleware',
     )
     ROOT_URLCONF = 'flamingo.urls'
 
@@ -85,7 +87,7 @@ class BaseSettings(DjangoDefaults):
     # Static files (CSS, JavaScript, Images) and Media
     MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
     MEDIA_URL = '/media/'
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     STATIC_ROOT = os.path.join(TOP_DIR, 'staticfiles')
     STATICFILES_DIRS = (
         os.path.join(TOP_DIR, 'static'),
