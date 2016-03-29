@@ -88,8 +88,7 @@ class FlamingoBaseTestCase(object):
         )
         return image, photo
 
-    def setUp(self):
-        super(FlamingoBaseTestCase, self).setUp()
+    def setup_user(self):
         self.user_profile = UserProfile.objects.create_account(
             username=self.USER_USERNAME,
             email=self.USER_EMAIL,
@@ -99,6 +98,12 @@ class FlamingoBaseTestCase(object):
         self.user.is_staff = True
         self.user.is_superuser = True
         self.user.save()
+        self.client.login(
+            username=self.USER_USERNAME,
+            password=self.USER_PASSWORD
+        )
+
+    def create_first_instances(self):
         _, self.photo = self.create_test_photo(
             user_profile=self.user_profile,
             title=self.CREATED_PHOTO_TITLE,
@@ -131,10 +136,11 @@ class FlamingoBaseTestCase(object):
             contest=self.contest,
             photo=self.photo
         )
-        self.client.login(
-            username=self.USER_USERNAME,
-            password=self.USER_PASSWORD
-        )
+
+    def setUp(self):
+        super(FlamingoBaseTestCase, self).setUp()
+        self.setup_user()
+        self.create_first_instances()
 
     def tearDown(self):
         Contest.objects.all().delete()
