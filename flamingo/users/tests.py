@@ -89,23 +89,19 @@ class UserTestCase(FlamingoTransactionTestCase):
 class UserAdminWebTestCase(FlamingoTestCase):
 
     def testUserAppAdminPageRenders(self):
-        response = self.client.get('/admin/users/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/users/')
 
     def testUserProfileChangelistAdminPageRenders(self):
-        response = self.client.get('/admin/users/userprofile/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/users/userprofile/')
 
     def testUserProfileAddAdminPageRenders(self):
-        response = self.client.get('/admin/users/userprofile/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/users/userprofile/add/')
 
     def testUserProfileChangeAdminPageRenders(self):
         url = '/admin/users/userprofile/{userprofile_id}/change/'.format(
             userprofile_id=self.user_profile.id
         )
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(url)
 
 
 class RegisterFormTestCase(FlamingoTestCase):
@@ -151,13 +147,12 @@ class RegisterWebTestCase(FlamingoTestCase):
 
     def testRegisterPageRenders(self):
         self.client.logout()
-        response = self.client.get('/register')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/register')
 
     def testUserRegisters(self):
         self.client.logout()
         UserProfile.objects.all().delete()
-        self.client.get('/register')
+        self.assertResponseRenders('/register')
         payload = {
             'username': self.CREATED_USER_USERNAME,
             'email': self.CREATED_USER_EMAIL,
@@ -166,17 +161,11 @@ class RegisterWebTestCase(FlamingoTestCase):
             'first_name': self.CREATED_USER_FIRST_NAME,
             'last_name': self.CREATED_USER_LAST_NAME,
         }
-        response = self.client.post('/register', payload, follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/')
+        self.assertResponseRedirects('/register', '/', method='POST', data=payload)
         self.assertEquals(UserProfile.objects.all().count(), 1)
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        response = self.client.get('/register', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/')
+        self.assertResponseRedirects('/register', '/')
 
 
 class LoginFormTestCase(FlamingoTestCase):
@@ -225,65 +214,45 @@ class LoginWebTestCase(FlamingoTestCase):
 
     def testLoginPageRenders(self):
         self.client.logout()
-        response = self.client.get('/login')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/login')
 
     def testUserLogsIn(self):
         self.client.logout()
-        self.client.get('/login')
+        self.assertResponseRenders('/login')
         payload = {
             'username': self.USER_USERNAME,
             'password': self.USER_PASSWORD,
         }
-        response = self.client.post('/login', payload, follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/')
+        self.assertResponseRedirects('/login', '/', method='POST', data=payload)
 
     def testUserLogsInWithEmail(self):
         self.client.logout()
-        self.client.get('/login')
+        self.assertResponseRenders('/login')
         payload = {
             'username': self.USER_EMAIL,
             'password': self.USER_PASSWORD,
         }
-        response = self.client.post('/login', payload, follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/')
+        self.assertResponseRedirects('/login', '/', method='POST', data=payload)
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        response = self.client.get('/login', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/')
+        self.assertResponseRedirects('/login', '/')
 
 
 class LogoutWebTestCase(FlamingoTestCase):
 
     def testRedirectsAfterLogoutToLogin(self):
-        response = self.client.get('/logout', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/login')
+        self.assertResponseRedirects('/logout', '/login')
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        response = self.client.get('/logout', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/login')
+        self.assertResponseRedirects('/logout', '/login')
 
 
 class ProfileWebTestCase(FlamingoTestCase):
 
     def testProfilePageRenders(self):
-        response = self.client.get('/profile')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/profile')
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        response = self.client.get('/profile', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(url, '/login/?next=/profile')
+        self.assertResponseRedirects('/profile', '/login/')

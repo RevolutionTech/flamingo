@@ -160,63 +160,51 @@ class VoteTestCase(FlamingoTestCase):
 class ContestAdminWebTestCase(FlamingoTestCase):
 
     def testContestAppAdminPageRenders(self):
-        response = self.client.get('/admin/contest/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/')
 
     def testSponsorChangelistAdminPageRenders(self):
-        response = self.client.get('/admin/contest/sponsor/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/sponsor/')
 
     def testSponsorAddAdminPageRenders(self):
-        response = self.client.get('/admin/contest/sponsor/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/sponsor/add/')
 
     def testSponsorChangeAdminPageRenders(self):
         url = '/admin/contest/sponsor/{sponsor_id}/change/'.format(
             sponsor_id=self.sponsor.id
         )
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(url)
 
     def testContestChangelistAdminPageRenders(self):
-        response = self.client.get('/admin/contest/contest/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/contest/')
 
     def testContestAddAdminPageRenders(self):
-        response = self.client.get('/admin/contest/contest/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/contest/add/')
 
     def testContestChangeAdminPageRenders(self):
         url = '/admin/contest/contest/{contest_id}/change/'.format(
             contest_id=self.contest.id
         )
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(url)
 
     def testEntryChangelistAdminPageRenders(self):
-        response = self.client.get('/admin/contest/entry/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/entry/')
 
     def testEntryAddAdminPageRenders(self):
-        response = self.client.get('/admin/contest/entry/add/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/contest/entry/add/')
 
     def testEntryChangeAdminPageRenders(self):
         url = '/admin/contest/entry/{entry_id}/change/'.format(
             entry_id=self.entry.id
         )
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(url)
 
 
 class HomeWebTestCase(FlamingoTestCase):
 
     def testHomePageRenders(self):
-        response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/')
         self.client.logout()
-        response = self.client.get('/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/')
 
 
 class SponsorDetailsWebTestCase(FlamingoTestCase):
@@ -228,11 +216,9 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
         )
 
     def testSponsorDetailsPageRenders(self):
-        response = self.client.get(self.sponsor_details_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(self.sponsor_details_url)
         self.client.logout()
-        response = self.client.get(self.sponsor_details_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(self.sponsor_details_url)
 
 
 class ContestDetailsWebTestCase(FlamingoTestCase):
@@ -244,8 +230,7 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
         )
 
     def testContestDetailsPageRenders(self):
-        response = self.client.get(self.contest_details_url)
-        self.assertEquals(response.status_code, 200)
+        response = self.assertResponseRenders(self.contest_details_url)
         self.assertTrue('dropzone-submit-photo' in response.content)
         self.assertTrue('upvote-button' in response.content)
         self.assertTrue('downvote-button' in response.content)
@@ -253,8 +238,7 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
 
     def testUnauthenticatedCannotVoteOrUpload(self):
         self.client.logout()
-        response = self.client.get(self.contest_details_url)
-        self.assertEquals(response.status_code, 200)
+        response = self.assertResponseRenders(self.contest_details_url)
         self.assertFalse('dropzone-submit-photo' in response.content)
         self.assertFalse('upvote-button' in response.content)
         self.assertFalse('downvote-button' in response.content)
@@ -277,45 +261,33 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
 
     def testSuccessfulUpload(self):
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
-        response = self.client.post(self.contest_upload_url, {'image': image})
-        self.assertEquals(response.status_code, 205)
+        self.assertResponseRenders(self.contest_upload_url, status_code=205, method='POST', data={'image': image,})
 
     def testRejectUnauthenticatedUsers(self):
         self.client.logout()
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
-        response = self.client.post(self.contest_upload_url, {'image': image})
-        self.assertEquals(response.status_code, 401)
+        self.assertResponseRenders(self.contest_upload_url, status_code=401, method='POST', data={'image': image,})
 
     def testRejectInvalidContest(self):
         invalid_contest_upload_url = '/contest/upload/{contest_slug}'.format(
             contest_slug='nonexistent-contest'
         )
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
-        response = self.client.post(
-            invalid_contest_upload_url,
-            {'image': image}
-        )
-        self.assertEquals(response.status_code, 404)
+        self.assertResponseRenders(invalid_contest_upload_url, status_code=404, method='POST', data={'image': image,})
 
     # For this test, set the maximum image size to 5 bytes
     @override_settings(MAXIMUM_IMAGE_SIZE=5)
     def testRejectLargePhotos(self):
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
-        response = self.client.post(self.contest_upload_url, {'image': image})
-        self.assertEquals(response.status_code, 400)
+        self.assertResponseRenders(self.contest_upload_url, status_code=400, method='POST', data={'image': image,})
 
     def testRejectNonImages(self):
         image = self.create_test_image(filename=self.PHOTO_NONIMAGE_FILENAME)
-        response = self.client.post(self.contest_upload_url, {'image': image})
-        self.assertEquals(response.status_code, 400)
+        self.assertResponseRenders(self.contest_upload_url, status_code=400, method='POST', data={'image': image,})
 
     def testRejectSubmissionAfterEndSubmissionDate(self):
         image = self.create_test_image(filename=self.PHOTO_FILENAME)
-        response = self.client.post(
-            self.ended_contest_upload_url,
-            {'image': image}
-        )
-        self.assertEquals(response.status_code, 400)
+        self.assertResponseRenders(self.ended_contest_upload_url, status_code=400, method='POST', data={'image': image,})
 
 
 class ContestVoteEntryTestCase(FlamingoTestCase):
@@ -326,8 +298,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.contest.slug,
                 entry_id=self.entry.id
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(contest_upvote_url, method='POST')
 
     def testSuccessfulDownvote(self):
         contest_downvote_url = \
@@ -335,8 +306,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.contest.slug,
                 entry_id=self.entry.id
             )
-        response = self.client.post(contest_downvote_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders(contest_downvote_url, method='POST')
 
     def testRejectUnauthenticatedUsers(self):
         self.client.logout()
@@ -345,8 +315,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.contest.slug,
                 entry_id=self.entry.id
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 401)
+        self.assertResponseRenders(contest_upvote_url, status_code=401, method='POST')
 
     def testRejectInvalidContest(self):
         contest_upvote_url = \
@@ -354,8 +323,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug='nonexistent-contest',
                 entry_id=self.entry.id
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 404)
+        self.assertResponseRenders(contest_upvote_url, status_code=404, method='POST')
 
     def testRejectInvalidEntry(self):
         contest_upvote_url = \
@@ -363,8 +331,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.contest.slug,
                 entry_id=Entry.objects.all().order_by('-id')[0].id + 1
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 404)
+        self.assertResponseRenders(contest_upvote_url, status_code=404, method='POST')
 
     def testRejectNonMatchingEntry(self):
         new_contest = Contest.objects.create(
@@ -388,8 +355,7 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.contest.slug,
                 entry_id=new_entry.id
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 404)
+        self.assertResponseRenders(contest_upvote_url, status_code=404, method='POST')
 
     def testRejectVotingAfterEndDate(self):
         _, photo = self.create_test_photo(
@@ -404,5 +370,4 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
                 contest_slug=self.ended_contest.slug,
                 entry_id=entry.id
             )
-        response = self.client.post(contest_upvote_url)
-        self.assertEquals(response.status_code, 400)
+        self.assertResponseRenders(contest_upvote_url, status_code=400, method='POST')

@@ -58,6 +58,10 @@ class FlamingoBaseTestCase(object):
     CREATED_CONTEST_SLUG = 'created-contest'
     CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
 
+    @staticmethod
+    def strip_query_params(url):
+        return url.split('?')[0]
+
     @classmethod
     def create_test_image(cls, filename):
         photo_full_filename = os.path.join(
@@ -87,6 +91,32 @@ class FlamingoBaseTestCase(object):
             description=description
         )
         return image, photo
+
+    def assertResponseRenders(self, url, status_code=200, method='GET', data={}, **kwargs):
+        request_method = getattr(self.client, method.lower())
+        follow = status_code == 302
+        response = request_method(url, data=data, follow=follow, **kwargs)
+
+        if status_code == 302:
+            redirect_url, response_status_code = response.redirect_chain[0]
+        else:
+            response_status_code = response.status_code
+        self.assertEquals(
+            response_status_code,
+            status_code,
+            "URL {url} returned with status code {actual_status} when {expected_status} was expected.".format(
+                url=url,
+                actual_status=response_status_code,
+                expected_status=status_code
+            )
+        )
+        return response
+
+    def assertResponseRedirects(self, url, redirect_url, method='GET', data={}, **kwargs):
+        response = self.assertResponseRenders(url, status_code=302, method=method, data=data, **kwargs)
+        redirect_url_from_response, _ = response.redirect_chain[0]
+        self.assertEquals(self.strip_query_params(redirect_url_from_response), redirect_url)
+        self.assertEquals(response.status_code, 200)
 
     def setup_user(self):
         self.user_profile = UserProfile.objects.create_account(
@@ -169,19 +199,11 @@ class FlamingoGeneralTestCase(FlamingoTestCase):
 class AdminHomeWebTestCase(FlamingoTestCase):
 
     def testAdminHomePageRenders(self):
-        response = self.client.get('/admin/')
-        self.assertEquals(response.status_code, 200)
+        self.assertResponseRenders('/admin/')
 
 
 class AdminLoginWebTestCase(FlamingoTestCase):
 
-    @staticmethod
-    def strip_query_params(url):
-        return url.split('?')[0]
-
     def testAdminLoginPageRenders(self):
         self.client.logout()
-        response = self.client.get('/admin/', follow=True)
-        url, status_code = response.redirect_chain[0]
-        self.assertEquals(status_code, 302)
-        self.assertEquals(self.strip_query_params(url), '/admin/login/')
+        self.assertResponseRedirects('/admin/', '/admin/login/')
