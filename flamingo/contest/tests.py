@@ -159,50 +159,35 @@ class VoteTestCase(FlamingoTestCase):
 
 class ContestAdminWebTestCase(FlamingoTestCase):
 
-    def testContestAppAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/')
-
-    def testSponsorChangelistAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/sponsor/')
-
-    def testSponsorAddAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/sponsor/add/')
-
-    def testSponsorChangeAdminPageRenders(self):
-        url = '/admin/contest/sponsor/{sponsor_id}/change/'.format(
-            sponsor_id=self.sponsor.id
-        )
-        self.assertResponseRenders(url)
-
-    def testContestChangelistAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/contest/')
-
-    def testContestAddAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/contest/add/')
-
-    def testContestChangeAdminPageRenders(self):
-        url = '/admin/contest/contest/{contest_id}/change/'.format(
-            contest_id=self.contest.id
-        )
-        self.assertResponseRenders(url)
-
-    def testEntryChangelistAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/entry/')
-
-    def testEntryAddAdminPageRenders(self):
-        self.assertResponseRenders('/admin/contest/entry/add/')
-
-    def testEntryChangeAdminPageRenders(self):
-        url = '/admin/contest/entry/{entry_id}/change/'.format(
-            entry_id=self.entry.id
-        )
-        self.assertResponseRenders(url)
+    def get_200s(self):
+        return [
+            '/admin/contest/',
+            '/admin/contest/sponsor/',
+            '/admin/contest/sponsor/add/',
+            '/admin/contest/sponsor/{sponsor_id}/change/'.format(
+                sponsor_id=self.sponsor.id
+            ),
+            '/admin/contest/contest/',
+            '/admin/contest/contest/add/',
+            '/admin/contest/contest/{contest_id}/change/'.format(
+                contest_id=self.contest.id
+            ),
+            '/admin/contest/entry/',
+            '/admin/contest/entry/add/',
+            '/admin/contest/entry/{entry_id}/change/'.format(
+                entry_id=self.entry.id
+            ),
+        ]
 
 
 class HomeWebTestCase(FlamingoTestCase):
 
+    def get_200s(self):
+        return [
+            '/',
+        ]
+
     def testHomePageRenders(self):
-        self.assertResponseRenders('/')
         self.client.logout()
         self.assertResponseRenders('/')
 
@@ -215,8 +200,12 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
             sponsor_slug=self.sponsor.slug
         )
 
+    def get_200s(self):
+        return [
+            self.sponsor_details_url,
+        ]
+
     def testSponsorDetailsPageRenders(self):
-        self.assertResponseRenders(self.sponsor_details_url)
         self.client.logout()
         self.assertResponseRenders(self.sponsor_details_url)
 

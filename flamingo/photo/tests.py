@@ -50,17 +50,12 @@ class PhotoTestCase(FlamingoTestCase):
 
 class PhotoAdminWebTestCase(FlamingoTestCase):
 
-    def testPhotoAppAdminPageRenders(self):
-        self.assertResponseRenders('/admin/photo/')
-
-    def testPhotoChangelistAdminPageRenders(self):
-        self.assertResponseRenders('/admin/photo/photo/')
-
-    def testPhotoAddAdminPageRenders(self):
-        self.assertResponseRenders('/admin/photo/photo/add/')
-
-    def testPhotoChangeAdminPageRenders(self):
-        url = '/admin/photo/photo/{photo_id}/change/'.format(
-            photo_id=self.photo.id
-        )
-        self.assertResponseRenders(url)
+    def get_200s(self):
+        return [
+            '/admin/photo/',
+            '/admin/photo/photo/',
+            '/admin/photo/photo/add/',
+            '/admin/photo/photo/{photo_id}/change/'.format(
+                photo_id=self.photo.id
+            ),
+        ]

@@ -118,6 +118,9 @@ class FlamingoBaseTestCase(object):
         self.assertEquals(self.strip_query_params(redirect_url_from_response), redirect_url)
         self.assertEquals(response.status_code, 200)
 
+    def get200s(self):
+        return []
+
     def setup_user(self):
         self.user_profile = UserProfile.objects.create_account(
             username=self.USER_USERNAME,
@@ -180,6 +183,10 @@ class FlamingoBaseTestCase(object):
         User.objects.all().delete()
         super(FlamingoBaseTestCase, self).tearDown()
 
+    def testRender200s(self):
+        for url in self.get200s():
+            self.assertResponseRenders(url)
+
 
 class FlamingoTestCase(FlamingoBaseTestCase, TestCase):
     pass
@@ -196,13 +203,12 @@ class FlamingoGeneralTestCase(FlamingoTestCase):
             self.create_test_image('missing.jpg')
 
 
-class AdminHomeWebTestCase(FlamingoTestCase):
+class AdminWebTestCase(FlamingoTestCase):
 
-    def testAdminHomePageRenders(self):
-        self.assertResponseRenders('/admin/')
-
-
-class AdminLoginWebTestCase(FlamingoTestCase):
+    def get_200s(self):
+        return [
+            '/admin/',
+        ]
 
     def testAdminLoginPageRenders(self):
         self.client.logout()

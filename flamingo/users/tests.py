@@ -88,20 +88,15 @@ class UserTestCase(FlamingoTransactionTestCase):
 
 class UserAdminWebTestCase(FlamingoTestCase):
 
-    def testUserAppAdminPageRenders(self):
-        self.assertResponseRenders('/admin/users/')
-
-    def testUserProfileChangelistAdminPageRenders(self):
-        self.assertResponseRenders('/admin/users/userprofile/')
-
-    def testUserProfileAddAdminPageRenders(self):
-        self.assertResponseRenders('/admin/users/userprofile/add/')
-
-    def testUserProfileChangeAdminPageRenders(self):
-        url = '/admin/users/userprofile/{userprofile_id}/change/'.format(
-            userprofile_id=self.user_profile.id
-        )
-        self.assertResponseRenders(url)
+    def get_200s(self):
+        return [
+            '/admin/users/',
+            '/admin/users/userprofile/',
+            '/admin/users/userprofile/add/',
+            '/admin/users/userprofile/{userprofile_id}/change/'.format(
+                userprofile_id=self.user_profile.id
+            ),
+        ]
 
 
 class RegisterFormTestCase(FlamingoTestCase):
@@ -250,8 +245,10 @@ class LogoutWebTestCase(FlamingoTestCase):
 
 class ProfileWebTestCase(FlamingoTestCase):
 
-    def testProfilePageRenders(self):
-        self.assertResponseRenders('/profile')
+    def get_200s(self):
+        return [
+            '/profile',
+        ]
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
