@@ -118,7 +118,7 @@ class FlamingoBaseTestCase(object):
         self.assertEquals(self.strip_query_params(redirect_url_from_response), redirect_url)
         self.assertEquals(response.status_code, 200)
 
-    def get200s(self):
+    def get_200s(self):
         return []
 
     def setup_user(self):
@@ -184,7 +184,7 @@ class FlamingoBaseTestCase(object):
         super(FlamingoBaseTestCase, self).tearDown()
 
     def testRender200s(self):
-        for url in self.get200s():
+        for url in self.get_200s():
             self.assertResponseRenders(url)
 
 
