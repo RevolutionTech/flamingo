@@ -6,7 +6,7 @@
 <div class="row">
     {% if can_vote %}
         <div class="small-4 columns entry-vote-button-space">
-            <a href="#" class="button expand success {% if not entry.has_upvoted %}disabled{% endif %} upvote-button"><i class="fa fa-2x fa-thumbs-up"></i></a>
+            <button type="button" class="button expanded {% if entry.has_upvoted %}success{% else %}secondary{% endif %} upvote-button"><i class="fa fa-2x fa-thumbs-up"></i></a>
         </div>
     {% endif %}
     <div class="{% if can_vote %}small-4{% else %}small-12{% endif %} columns entry-vote-button-space">
@@ -14,7 +14,7 @@
     </div>
     {% if can_vote %}
         <div class="small-4 columns entry-vote-button-space">
-            <a href="#" class="button expand alert {% if not entry.has_downvoted %}disabled{% endif %} downvote-button"><i class="fa fa-2x fa-thumbs-down"></i></a>
+            <button type="button" class="button expanded {% if entry.has_downvoted %}alert{% else %}secondary{% endif %} downvote-button"><i class="fa fa-2x fa-thumbs-down"></i></a>
         </div>
     {% endif %}
 </div>

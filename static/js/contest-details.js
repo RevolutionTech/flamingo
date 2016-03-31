@@ -60,7 +60,7 @@ $(document).ready(function(){
     $('.entry .button').click(function() {
         // Ignore pressing this button if it's already selected
         // (this saves making an outgoing request)
-        if (!$(this).hasClass('disabled')) return;
+        if (!$(this).hasClass('secondary')) return;
 
         // Determine vote_url
         var entry_id = $(this).parents('.entry').attr('id');
@@ -84,11 +84,18 @@ $(document).ready(function(){
         var entry_vote_count = $(this).parents('.row').find('.entry-vote-count');
         jQuery.post(vote_url, {})
             .done(function(resp) {
-                // Disable other voting button
-                other_voting_button.addClass('disabled');
+                // Highlight selected voting button
+                this_button.removeClass('secondary');
+                if (vote_type === 'upvote') {
+                    other_voting_button.removeClass('alert');
+                    this_button.addClass('success');
+                } else if (vote_type === 'downvote') {
+                    other_voting_button.removeClass('success');
+                    this_button.addClass('alert');
+                }
 
-                // Enable selected voting button
-                this_button.removeClass('disabled');
+                // Unhighlight other voting button
+                other_voting_button.addClass('secondary');
 
                 // Update voting count
                 entry_vote_count.text(resp['vote_count']);
