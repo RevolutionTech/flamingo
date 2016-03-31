@@ -1,10 +1,13 @@
 *, h1, h2, h3, h4, h5, h6, .button {
     font-family: Dosis, sans-serif;
 }
-body {
-    background-color: #ffccff;
-}
 
+.top-bar, .menu > li {
+    background-color: #cc5a99;
+}
+.menu > li > a {
+    color: #fff;
+}
 .container {
     padding: 10px;
 }

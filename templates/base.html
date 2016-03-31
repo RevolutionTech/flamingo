@@ -11,6 +11,25 @@
         {% block cssincludes %}{% endblock %}
     </head>
     <body>
+        <!-- Nav bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <ul class="menu">
+                    <li class="menu-text">{% block heading %}flamingo.photo{% endblock %}</li>
+                    <li><a href="{% url 'home' %}">Contests</a></li>
+                </ul>
+            </div>
+            <div class="top-bar-right">
+                <ul class="menu">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}" class="button">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}?next={{ request.path }}" class="button">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
         <!-- Content -->
         <div class="container">
             {% block content %}
