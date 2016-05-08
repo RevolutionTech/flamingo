@@ -1,7 +1,8 @@
 # Flamingo
 ### Created by: Lucas Connors
 
-[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo) [![Coverage Status](https://coveralls.io/repos/RevolutionTech/flamingo/badge.svg?branch=master&service=github)](https://coveralls.io/github/RevolutionTech/flamingo?branch=master)
+[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo)
+[![codecov](https://codecov.io/gh/RevolutionTech/flamingo/branch/master/graph/badge.svg)](https://codecov.io/gh/RevolutionTech/flamingo)
 [![Code Climate](https://codeclimate.com/github/RevolutionTech/flamingo/badges/gpa.svg)](https://codeclimate.com/github/RevolutionTech/flamingo)
 [![Code Health](https://landscape.io/github/RevolutionTech/flamingo/master/landscape.svg?style=flat)](https://landscape.io/github/RevolutionTech/flamingo/master)
 [![Dependency Status](https://www.versioneye.com/user/projects/5609e6a35a262f001e00058c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5609e6a35a262f001e00058c)
@@ -30,7 +31,7 @@ In the future you can reactivate the virtual environment with:
 
 ### Installation
 
-Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), python-memcached, psycopg2, [pillow](https://pillow.readthedocs.org/), django-classbasedsettings, [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/), and python-coveralls. You can do this simply with the command:
+Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), python-memcached, psycopg2, [pillow](https://pillow.readthedocs.org/), django-classbasedsettings, and [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/). You can do this simply with the command:
 
     pip install -r requirements.txt
 

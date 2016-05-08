@@ -1,4 +1,6 @@
 [run]
+source = ./
+
 # Omit files from coverage that only run on prod
 omit =
     flamingo/gunicorn.py
