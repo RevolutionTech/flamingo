@@ -30,6 +30,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.staticfiles',
         'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
+        'storages',
         'users.apps.UsersConfig',
         'photo.apps.PhotoConfig',
         'contest.apps.ContestConfig',
@@ -93,6 +94,14 @@ class BaseSettings(DjangoDefaults):
         os.path.join(TOP_DIR, 'static'),
     )
     STATIC_URL = '/static/'
+    STATICFILES_LOCATION = 'static'
+    MEDIAFILES_LOCATION = 'media'
+    AWS_HEADERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'Cache-Control': 'max-age=94608000',
+    }
+    AWS_STORAGE_BUCKET_NAME = 'flamingo-photo'
+    AWS_S3_CUSTOM_DOMAIN = '{bucket}.s3.amazonaws.com'.format(bucket=AWS_STORAGE_BUCKET_NAME)
     MAXIMUM_IMAGE_SIZE = 2 * 1024 * 1024 # 2MB
 
     # Authentication
