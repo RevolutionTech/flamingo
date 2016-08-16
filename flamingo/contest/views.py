@@ -52,7 +52,7 @@ class ContestDetailsView(TemplateView):
 
     def entry_to_dict(self, entry):
         user = self.request.user
-        if user.is_authenticated():
+        if user.is_authenticated:
             has_upvoted = entry.has_upvoted(user)
             has_downvoted = entry.has_downvoted(user)
         else:
@@ -69,7 +69,7 @@ class ContestDetailsView(TemplateView):
     def get_context_data(self, slug, **kwargs):
         context = super(ContestDetailsView, self).get_context_data(**kwargs)
 
-        user_authenticated = self.request.user.is_authenticated()
+        user_authenticated = self.request.user.is_authenticated
         contest = Contest.objects.get(slug=slug)
 
         context['contest'] = contest

@@ -6,8 +6,8 @@
 
 from django.contrib.auth import authenticate, login as auth_login, \
     logout as auth_logout
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
