@@ -17,7 +17,7 @@ class BaseSettings(DjangoDefaults):
     SECRET_KEY = os.environ['FLAMINGO_SECRET_KEY']
 
     DEBUG = True
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
     # Application definition
     INSTALLED_APPS = (
