@@ -8,8 +8,9 @@ import datetime
 import os
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
+
+from pigeon.test import RenderTestCase, RenderTransactionTestCase
 
 from users.models import UserProfile
 from photo.models import Photo
@@ -57,10 +58,6 @@ class FlamingoBaseTestCase(object):
     CREATED_CONTEST_SLUG = 'created-contest'
     CREATED_CONTEST_DESCRIPTION = 'This is a created contest.'
 
-    @staticmethod
-    def strip_query_params(url):
-        return url.split('?')[0]
-
     @classmethod
     def create_test_image(cls, filename):
         photo_full_filename = os.path.join(
@@ -90,35 +87,6 @@ class FlamingoBaseTestCase(object):
             description=description
         )
         return image, photo
-
-    def assertResponseRenders(self, url, status_code=200, method='GET', data={}, **kwargs):
-        request_method = getattr(self.client, method.lower())
-        follow = status_code == 302
-        response = request_method(url, data=data, follow=follow, **kwargs)
-
-        if status_code == 302:
-            redirect_url, response_status_code = response.redirect_chain[0]
-        else:
-            response_status_code = response.status_code
-        self.assertEquals(
-            response_status_code,
-            status_code,
-            "URL {url} returned with status code {actual_status} when {expected_status} was expected.".format(
-                url=url,
-                actual_status=response_status_code,
-                expected_status=status_code
-            )
-        )
-        return response
-
-    def assertResponseRedirects(self, url, redirect_url, method='GET', data={}, **kwargs):
-        response = self.assertResponseRenders(url, status_code=302, method=method, data=data, **kwargs)
-        redirect_url_from_response, _ = response.redirect_chain[0]
-        self.assertEquals(self.strip_query_params(redirect_url_from_response), redirect_url)
-        self.assertEquals(response.status_code, 200)
-
-    def get200s(self):
-        return []
 
     def setup_user(self):
         self.user_profile = UserProfile.objects.create_account(
@@ -174,16 +142,12 @@ class FlamingoBaseTestCase(object):
         self.setup_user()
         self.create_first_instances()
 
-    def testRender200s(self):
-        for url in self.get200s():
-            self.assertResponseRenders(url)
 
-
-class FlamingoTestCase(FlamingoBaseTestCase, TestCase):
+class FlamingoTestCase(FlamingoBaseTestCase, RenderTestCase):
     pass
 
 
-class FlamingoTransactionTestCase(FlamingoBaseTestCase, TransactionTestCase):
+class FlamingoTransactionTestCase(FlamingoBaseTestCase, RenderTransactionTestCase):
     pass
 
 
