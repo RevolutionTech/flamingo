@@ -9,7 +9,7 @@ import os
 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, TestCase, TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 
 from users.models import UserProfile
