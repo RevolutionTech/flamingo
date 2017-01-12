@@ -159,7 +159,7 @@ class VoteTestCase(FlamingoTestCase):
 
 class ContestAdminWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/admin/contest/',
             '/admin/contest/sponsor/',
@@ -182,7 +182,7 @@ class ContestAdminWebTestCase(FlamingoTestCase):
 
 class HomeWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/',
         ]
@@ -200,7 +200,7 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
             sponsor_slug=self.sponsor.slug
         )
 
-    def get_200s(self):
+    def get200s(self):
         return [
             self.sponsor_details_url,
         ]

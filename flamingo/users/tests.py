@@ -88,7 +88,7 @@ class UserTestCase(FlamingoTransactionTestCase):
 
 class UserAdminWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/admin/users/',
             '/admin/users/userprofile/',
@@ -246,7 +246,7 @@ class LogoutWebTestCase(FlamingoTestCase):
 
 class ProfileWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/profile',
         ]

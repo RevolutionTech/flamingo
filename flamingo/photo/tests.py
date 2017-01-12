@@ -50,7 +50,7 @@ class PhotoTestCase(FlamingoTestCase):
 
 class PhotoAdminWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/admin/photo/',
             '/admin/photo/photo/',

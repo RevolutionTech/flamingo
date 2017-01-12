@@ -117,7 +117,7 @@ class FlamingoBaseTestCase(object):
         self.assertEquals(self.strip_query_params(redirect_url_from_response), redirect_url)
         self.assertEquals(response.status_code, 200)
 
-    def get_200s(self):
+    def get200s(self):
         return []
 
     def setup_user(self):
@@ -175,7 +175,7 @@ class FlamingoBaseTestCase(object):
         self.create_first_instances()
 
     def testRender200s(self):
-        for url in self.get_200s():
+        for url in self.get200s():
             self.assertResponseRenders(url)
 
 
@@ -196,7 +196,7 @@ class FlamingoGeneralTestCase(FlamingoTestCase):
 
 class AdminWebTestCase(FlamingoTestCase):
 
-    def get_200s(self):
+    def get200s(self):
         return [
             '/admin/',
         ]
