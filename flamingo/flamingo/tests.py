@@ -7,7 +7,6 @@
 import datetime
 import os
 
-from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
@@ -174,14 +173,6 @@ class FlamingoBaseTestCase(object):
         super(FlamingoBaseTestCase, self).setUp()
         self.setup_user()
         self.create_first_instances()
-
-    def tearDown(self):
-        Contest.objects.all().delete()
-        Sponsor.objects.all().delete()
-        Photo.objects.all().delete()
-        UserProfile.objects.all().delete()
-        User.objects.all().delete()
-        super(FlamingoBaseTestCase, self).tearDown()
 
     def testRender200s(self):
         for url in self.get_200s():
