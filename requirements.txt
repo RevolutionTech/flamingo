@@ -5,10 +5,10 @@ django-pigeon==0.2.0
 python-memcached==1.58
 psycopg2==2.7.1
 whitenoise==3.3.0
-Pillow==4.1.1
+Pillow==4.2.1
 django-classbasedsettings==1.5.0
 dj-database-url==0.4.2
 sorl-thumbnail==12.4a1
-boto==2.47.0
-django-storages==1.5.2
+boto==2.48.0
+django-storages==1.6.3
 raven==6.1.0
