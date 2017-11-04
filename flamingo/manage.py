@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-import warnings
-
-# Propagate warnings as errors when running tests
-if len(sys.argv) >= 2 and sys.argv[1] == 'test':
-    warnings.filterwarnings('error')
 
 import cbsettings
 
