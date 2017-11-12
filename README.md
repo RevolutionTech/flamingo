@@ -39,8 +39,8 @@ Then in your virtual environment, you will need to install Python dependencies s
 
 Next we will need to set up some environment variables for your dev instance of Flamingo. These values should be kept secret. Add a secret key and the database credentials to your `~/.bashrc` file:
 
-    export FLAMINGO_SECRET_KEY=-3f5yh\&\(s5%9uigtx^yn=t_woj0@90__fr\!t2b*96f5xoyzb%b
-    export FLAMINGO_DATABASE_URL=postgres://postgres:abc123@localhost:5432/flamingo
+    export FLAMINGO_SECRET_KEY='-3f5yh\&\(s5%9uigtx^yn=t_woj0@90__fr\!t2b*96f5xoyzb%b'
+    export FLAMINGO_DATABASE_URL='postgres://postgres:abc123@localhost:5432/flamingo'
 
 For reference, the format of the `DATABASE_URL` is as follows:
 
@@ -62,10 +62,10 @@ In your production environment, you will need to create a directory under `flami
     cd flamingo/settings
     mkdir secrets
     cd secrets
-    echo "PROD" > FLAMINGO_ENV
-    echo "abc123" > FLAMINGO_RAVEN_SECRET_KEY
-    echo "xyz" > FLAMINGO_AWS_ACCESS_KEY_ID
-    echo "abc123" > FLAMINGO_AWS_SECRET_ACCESS_KEY
+    echo 'PROD' > FLAMINGO_ENV
+    echo 'abc123' > FLAMINGO_RAVEN_SECRET_KEY
+    echo 'xyz' > FLAMINGO_AWS_ACCESS_KEY_ID
+    echo 'abc123' > FLAMINGO_AWS_SECRET_ACCESS_KEY
 
 For reference, the format of the Sentry DSN is as follows:
 

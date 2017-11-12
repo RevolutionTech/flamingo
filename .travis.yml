@@ -10,7 +10,7 @@ install:
 
 before_script:
   - psql -c "CREATE DATABASE flamingo;" -U postgres
-  - export FLAMINGO_SECRET_KEY=-3f5yh\&\(s5%9uigtx^yn=t_woj0@90__fr\!t2b*96f5xoyzb%b
+  - export FLAMINGO_SECRET_KEY='-3f5yh\&\(s5%9uigtx^yn=t_woj0@90__fr\!t2b*96f5xoyzb%b'
 
 script:
   - cd flamingo
