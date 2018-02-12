@@ -15,7 +15,7 @@
 
 Flamingo requires [memcached](http://memcached.org/), [PostgreSQL](http://www.postgresql.org/), pip and libjpeg-dev, which you can install on debian with:
 
-    sudo apt-get install memcached postgresql postgresql-contrib python-dev python-pip libpq-dev libjpeg-dev
+    sudo apt-get install memcached postgresql postgresql-contrib python-dev python-pip libssl-dev libpq-dev libjpeg-dev
 
 I recommend using a virtual environment for Flamingo. If you don't have it already, you can install [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html) and virtualenvwrapper globally with pip:
 
