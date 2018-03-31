@@ -20,7 +20,7 @@ class Photo(models.Model):
     img = models.ImageField(upload_to='photo')
     description = models.TextField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 

@@ -22,7 +22,7 @@ class Sponsor(models.Model):
     slug = models.SlugField(max_length=30, db_index=True)
     bio = models.TextField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def url(self):
@@ -39,9 +39,9 @@ class Contest(models.Model):
     submission_close = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{sponsor}: {name}".format(
-            sponsor=unicode(self.sponsor),
+            sponsor=str(self.sponsor),
             name=self.name
         )
 
@@ -71,8 +71,8 @@ class Entry(models.Model):
     class Meta:
         verbose_name_plural = "Entries"
 
-    def __unicode__(self):
-        return unicode(self.photo)
+    def __str__(self):
+        return str(self.photo)
 
     def vote_count(self):
         votes = Vote.objects.filter(entry=self)
@@ -126,9 +126,9 @@ class Vote(models.Model):
     class Meta:
         unique_together = (('entry', 'user',),)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{vote_type} by {user} for {entry}".format(
             vote_type=self.get_vote_type_display(),
-            entry=unicode(self.entry),
-            user=unicode(self.user)
+            entry=str(self.entry),
+            user=str(self.user)
         )

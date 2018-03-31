@@ -31,7 +31,7 @@ class PhotoTestCase(FlamingoTestCase):
 
         # Verify photo properties
         self.assertEquals(
-            unicode(photo),
+            str(photo),
             self.PHOTO_TITLE
         )
         self.assertEquals(

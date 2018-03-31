@@ -28,7 +28,7 @@ class UserTestCase(FlamingoTransactionTestCase):
         created_user_profile = UserProfile.objects.get()
         created_user_profile.bio = self.USER_PROFILE_BIO
         self.assertEquals(
-            unicode(created_user_profile),
+            str(created_user_profile),
             self.CREATED_USER_USERNAME
         )
         self.assertEquals(

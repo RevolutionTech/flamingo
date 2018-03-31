@@ -19,8 +19,8 @@ class UserProfile(models.Model):
 
     objects = UserProfileManager()
 
-    def __unicode__(self):
-        return unicode(self.user)
+    def __str__(self):
+        return str(self.user)
 
     def full_name(self):
         return u"{first} {last}".format(

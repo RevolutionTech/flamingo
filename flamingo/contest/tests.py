@@ -24,7 +24,7 @@ class SponsorTestCase(FlamingoTestCase):
         self.assertEquals(Sponsor.objects.all().count(), 1)
         sponsor = Sponsor.objects.get()
         sponsor.bio = self.SPONSOR_BIO
-        self.assertEquals(unicode(sponsor), self.CREATED_SPONSOR_NAME)
+        self.assertEquals(str(sponsor), self.CREATED_SPONSOR_NAME)
         self.assertEquals(sponsor.name, self.CREATED_SPONSOR_NAME)
         self.assertEquals(sponsor.bio, self.SPONSOR_BIO)
 
@@ -45,7 +45,7 @@ class ContestTestCase(FlamingoTestCase):
         self.assertEquals(Contest.objects.all().count(), 1)
         contest = Contest.objects.get()
         self.assertEquals(
-            unicode(contest),
+            str(contest),
             "{sponsor}: {name}".format(
                 sponsor=self.sponsor.name,
                 name=self.CREATED_CONTEST_NAME
@@ -89,8 +89,8 @@ class EntryTestCase(FlamingoTestCase):
         self.assertEquals(Entry.objects.all().count(), 1)
         entry = Entry.objects.get()
         self.assertEquals(
-            unicode(entry),
-            unicode(entry.photo)
+            str(entry),
+            str(entry.photo)
         )
         self.assertEquals(entry.contest, self.contest)
         self.assertEquals(entry.photo, self.photo)
@@ -108,10 +108,10 @@ class VoteTestCase(FlamingoTestCase):
         self.assertEquals(Vote.objects.all().count(), 1)
         vote = Vote.objects.get()
         self.assertEquals(
-            unicode(vote),
+            str(vote),
             'Upvote by {user} for {entry}'.format(
-                user=unicode(self.user),
-                entry=unicode(self.entry)
+                user=str(self.user),
+                entry=str(self.entry)
             )
         )
 
@@ -125,10 +125,10 @@ class VoteTestCase(FlamingoTestCase):
         self.assertEquals(Vote.objects.all().count(), 1)
         vote = Vote.objects.get()
         self.assertEquals(
-            unicode(vote),
+            str(vote),
             'Downvote by {user} for {entry}'.format(
-                user=unicode(self.user),
-                entry=unicode(self.entry)
+                user=str(self.user),
+                entry=str(self.entry)
             )
         )
 
@@ -221,25 +221,25 @@ class ContestDetailsWebTestCase(FlamingoTestCase):
     def testContestDetailsPageRenders(self):
         response = self.assertResponseRenders(self.contest_details_url)
         selectors = [
-            'dropzone-submit-photo',
-            'upvote-button',
-            'downvote-button',
+            b'dropzone-submit-photo',
+            b'upvote-button',
+            b'downvote-button',
         ]
         for selector in selectors:
             self.assertIn(selector, response.content)
-        self.assertNotIn('login-to-vote', response.content)
+        self.assertNotIn(b'login-to-vote', response.content)
 
     def testUnauthenticatedCannotVoteOrUpload(self):
         self.client.logout()
         response = self.assertResponseRenders(self.contest_details_url)
         selectors = [
-            'dropzone-submit-photo',
-            'upvote-button',
-            'downvote-button',
+            b'dropzone-submit-photo',
+            b'upvote-button',
+            b'downvote-button',
         ]
         for selector in selectors:
             self.assertNotIn(selector, response.content)
-        self.assertIn('login-to-vote', response.content)
+        self.assertIn(b'login-to-vote', response.content)
 
 
 class ContestUploadPhotoTestCase(FlamingoTestCase):
