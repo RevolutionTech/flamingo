@@ -21,12 +21,12 @@ class SponsorTestCase(FlamingoTestCase):
             name=self.CREATED_SPONSOR_NAME,
             slug=self.CREATED_SPONSOR_SLUG
         )
-        self.assertEquals(Sponsor.objects.all().count(), 1)
+        self.assertEqual(Sponsor.objects.all().count(), 1)
         sponsor = Sponsor.objects.get()
         sponsor.bio = self.SPONSOR_BIO
-        self.assertEquals(str(sponsor), self.CREATED_SPONSOR_NAME)
-        self.assertEquals(sponsor.name, self.CREATED_SPONSOR_NAME)
-        self.assertEquals(sponsor.bio, self.SPONSOR_BIO)
+        self.assertEqual(str(sponsor), self.CREATED_SPONSOR_NAME)
+        self.assertEqual(sponsor.name, self.CREATED_SPONSOR_NAME)
+        self.assertEqual(sponsor.bio, self.SPONSOR_BIO)
 
 
 class ContestTestCase(FlamingoTestCase):
@@ -42,18 +42,18 @@ class ContestTestCase(FlamingoTestCase):
             submission_close=self.NEXT_WEEK,
             end=self.IN_TWO_WEEKS
         )
-        self.assertEquals(Contest.objects.all().count(), 1)
+        self.assertEqual(Contest.objects.all().count(), 1)
         contest = Contest.objects.get()
-        self.assertEquals(
+        self.assertEqual(
             str(contest),
             "{sponsor}: {name}".format(
                 sponsor=self.sponsor.name,
                 name=self.CREATED_CONTEST_NAME
             )
         )
-        self.assertEquals(contest.sponsor, self.sponsor)
-        self.assertEquals(contest.name, self.CREATED_CONTEST_NAME)
-        self.assertEquals(
+        self.assertEqual(contest.sponsor, self.sponsor)
+        self.assertEqual(contest.name, self.CREATED_CONTEST_NAME)
+        self.assertEqual(
             contest.description,
             self.CREATED_CONTEST_DESCRIPTION
         )
@@ -64,15 +64,15 @@ class ContestTestCase(FlamingoTestCase):
             name=self.CREATED_CONTEST_NAME,
             description=self.CREATED_CONTEST_DESCRIPTION
         )
-        self.assertEquals(
+        self.assertEqual(
             contest.submission_open.date(),
             timezone.now().date()
         )
-        self.assertEquals(
+        self.assertEqual(
             contest.submission_close,
             contest.submission_open + datetime.timedelta(days=7)
         )
-        self.assertEquals(
+        self.assertEqual(
             contest.end,
             contest.submission_close + datetime.timedelta(days=7)
         )
@@ -86,14 +86,14 @@ class EntryTestCase(FlamingoTestCase):
             contest=self.contest,
             photo=self.photo
         )
-        self.assertEquals(Entry.objects.all().count(), 1)
+        self.assertEqual(Entry.objects.all().count(), 1)
         entry = Entry.objects.get()
-        self.assertEquals(
+        self.assertEqual(
             str(entry),
             str(entry.photo)
         )
-        self.assertEquals(entry.contest, self.contest)
-        self.assertEquals(entry.photo, self.photo)
+        self.assertEqual(entry.contest, self.contest)
+        self.assertEqual(entry.photo, self.photo)
 
 
 class VoteTestCase(FlamingoTestCase):
@@ -105,9 +105,9 @@ class VoteTestCase(FlamingoTestCase):
             user=self.user,
             vote_type=Vote.UPVOTE
         )
-        self.assertEquals(Vote.objects.all().count(), 1)
+        self.assertEqual(Vote.objects.all().count(), 1)
         vote = Vote.objects.get()
-        self.assertEquals(
+        self.assertEqual(
             str(vote),
             'Upvote by {user} for {entry}'.format(
                 user=str(self.user),
@@ -122,9 +122,9 @@ class VoteTestCase(FlamingoTestCase):
             user=self.user,
             vote_type=Vote.DOWNVOTE
         )
-        self.assertEquals(Vote.objects.all().count(), 1)
+        self.assertEqual(Vote.objects.all().count(), 1)
         vote = Vote.objects.get()
-        self.assertEquals(
+        self.assertEqual(
             str(vote),
             'Downvote by {user} for {entry}'.format(
                 user=str(self.user),
@@ -134,27 +134,27 @@ class VoteTestCase(FlamingoTestCase):
 
     def testUserCannotUpvoteTwice(self):
         Vote.objects.all().delete()
-        self.assertEquals(self.entry.vote_count(), 0)
+        self.assertEqual(self.entry.vote_count(), 0)
         vote_count = self.entry.upvote(user=self.user)
-        self.assertEquals(vote_count, 1)
+        self.assertEqual(vote_count, 1)
         vote_count = self.entry.upvote(user=self.user)
-        self.assertEquals(vote_count, 1)
+        self.assertEqual(vote_count, 1)
 
     def testUserCannotDownvoteTwice(self):
         Vote.objects.all().delete()
-        self.assertEquals(self.entry.vote_count(), 0)
+        self.assertEqual(self.entry.vote_count(), 0)
         vote_count = self.entry.downvote(user=self.user)
-        self.assertEquals(vote_count, -1)
+        self.assertEqual(vote_count, -1)
         vote_count = self.entry.downvote(user=self.user)
-        self.assertEquals(vote_count, -1)
+        self.assertEqual(vote_count, -1)
 
     def testUserCanChangeVote(self):
         Vote.objects.all().delete()
-        self.assertEquals(self.entry.vote_count(), 0)
+        self.assertEqual(self.entry.vote_count(), 0)
         vote_count = self.entry.upvote(user=self.user)
-        self.assertEquals(vote_count, 1)
+        self.assertEqual(vote_count, 1)
         vote_count = self.entry.downvote(user=self.user)
-        self.assertEquals(vote_count, -1)
+        self.assertEqual(vote_count, -1)
 
 
 class ContestAdminWebTestCase(FlamingoTestCase):

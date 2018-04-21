@@ -27,25 +27,25 @@ class PhotoTestCase(FlamingoTestCase):
             filename=self.PHOTO_FILENAME,
             description=self.PHOTO_DESCRIPTION
         )
-        self.assertEquals(Photo.objects.all().count(), 1)
+        self.assertEqual(Photo.objects.all().count(), 1)
 
         # Verify photo properties
-        self.assertEquals(
+        self.assertEqual(
             str(photo),
             self.PHOTO_TITLE
         )
-        self.assertEquals(
+        self.assertEqual(
             photo.title,
             self.PHOTO_TITLE
         )
-        self.assertEquals(
+        self.assertEqual(
             photo.description,
             self.PHOTO_DESCRIPTION
         )
         original_image = Image.open(image)
         stored_image = Image.open(photo.img)
-        self.assertEquals(stored_image.width, original_image.width)
-        self.assertEquals(stored_image.height, original_image.height)
+        self.assertEqual(stored_image.width, original_image.width)
+        self.assertEqual(stored_image.height, original_image.height)
 
 
 class PhotoAdminWebTestCase(FlamingoTestCase):

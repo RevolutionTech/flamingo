@@ -23,38 +23,38 @@ class UserTestCase(FlamingoTransactionTestCase):
             first_name=self.CREATED_USER_FIRST_NAME,
             last_name=self.CREATED_USER_LAST_NAME,
         )
-        self.assertEquals(User.objects.all().count(), 1)
-        self.assertEquals(UserProfile.objects.all().count(), 1)
+        self.assertEqual(User.objects.all().count(), 1)
+        self.assertEqual(UserProfile.objects.all().count(), 1)
         created_user_profile = UserProfile.objects.get()
         created_user_profile.bio = self.USER_PROFILE_BIO
-        self.assertEquals(
+        self.assertEqual(
             str(created_user_profile),
             self.CREATED_USER_USERNAME
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.user.username,
             self.CREATED_USER_USERNAME
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.user.email,
             self.CREATED_USER_EMAIL
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.user.first_name,
             self.CREATED_USER_FIRST_NAME
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.user.last_name,
             self.CREATED_USER_LAST_NAME
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.full_name(),
             "{first} {last}".format(
                 first=self.CREATED_USER_FIRST_NAME,
                 last=self.CREATED_USER_LAST_NAME
             )
         )
-        self.assertEquals(
+        self.assertEqual(
             created_user_profile.bio,
             self.USER_PROFILE_BIO
         )
@@ -66,8 +66,8 @@ class UserTestCase(FlamingoTransactionTestCase):
             email=self.USER_EMAIL,
             password=self.USER_PASSWORD
         )
-        self.assertEquals(User.objects.all().count(), 1)
-        self.assertEquals(UserProfile.objects.all().count(), 1)
+        self.assertEqual(User.objects.all().count(), 1)
+        self.assertEqual(UserProfile.objects.all().count(), 1)
 
     def testCannotCreateAccountWithTakenUsername(self):
         with self.assertRaises(UserAlreadyExistsException):
@@ -133,7 +133,7 @@ class RegisterFormTestCase(FlamingoTestCase):
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
-        self.assertEquals(len(form.errors['__all__']), 1)
+        self.assertEqual(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
         self.assertIn('Password', error)
         self.assertIn('not match', error)
@@ -158,7 +158,7 @@ class RegisterWebTestCase(FlamingoTestCase):
             'last_name': self.CREATED_USER_LAST_NAME,
         }
         self.assertResponseRedirects('/register', '/', method='POST', data=payload)
-        self.assertEquals(UserProfile.objects.all().count(), 1)
+        self.assertEqual(UserProfile.objects.all().count(), 1)
 
     def testRedirectsAuthenticatedUsersToHome(self):
         self.assertResponseRedirects('/register', '/')
@@ -177,9 +177,9 @@ class LoginFormTestCase(FlamingoTestCase):
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
-        self.assertEquals(len(form.errors['__all__']), 1)
+        self.assertEqual(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
-        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+        self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
     def testEmailDoesNotExist(self):
         form_data = {
@@ -189,9 +189,9 @@ class LoginFormTestCase(FlamingoTestCase):
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
-        self.assertEquals(len(form.errors['__all__']), 1)
+        self.assertEqual(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
-        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+        self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
     def testPasswordIncorrect(self):
         form_data = {
@@ -201,9 +201,9 @@ class LoginFormTestCase(FlamingoTestCase):
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
-        self.assertEquals(len(form.errors['__all__']), 1)
+        self.assertEqual(len(form.errors['__all__']), 1)
         (error,) = form.errors['__all__']
-        self.assertEquals(error, LoginForm.FAILED_AUTH_WARNING)
+        self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
 
 class LoginWebTestCase(FlamingoTestCase):
