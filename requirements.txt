@@ -1,5 +1,5 @@
 coverage==4.5.1
-gunicorn==19.7.1
+gunicorn==19.8.0
 Django==1.11.11
 django-pigeon==0.3.0
 python-memcached==1.59
