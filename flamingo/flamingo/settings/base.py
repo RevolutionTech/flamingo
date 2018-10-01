@@ -100,10 +100,8 @@ class BaseSettings(DjangoDefaults):
     )
     AWS_S3_KEY_PREFIX = 'media'
     AWS_S3_KEY_PREFIX_STATIC = 'static'
-    AWS_HEADERS = {
-        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
-        'Cache-Control': 'max-age=94608000',
-    }
+    AWS_S3_BUCKET_AUTH = False
+    AWS_S3_MAX_AGE_SECONDS = 60 * 60 * 24 * 365  # 1 year
     MAXIMUM_IMAGE_SIZE = 2 * 1024 * 1024 # 2MB
 
     @property
