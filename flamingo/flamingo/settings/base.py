@@ -10,6 +10,13 @@ from cbsettings import DjangoDefaults
 import dj_database_url
 
 
+def aws_s3_bucket_url(settings_class, bucket_name_settings):
+    bucket_name = getattr(settings_class, bucket_name_settings, '')
+    if bucket_name:
+        return 'https://{bucket}.s3.amazonaws.com'.format(bucket=bucket_name)
+    return ''
+
+
 class BaseSettings(DjangoDefaults):
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -30,7 +37,7 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.staticfiles',
         'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
-        'storages',
+        'django_s3_storage',
         'users.apps.UsersConfig',
         'photo.apps.PhotoConfig',
         'contest.apps.ContestConfig',
@@ -86,22 +93,32 @@ class BaseSettings(DjangoDefaults):
 
     # Static files (CSS, JavaScript, Images) and Media
     MEDIA_ROOT = os.path.join(TOP_DIR, 'media')
-    MEDIA_URL = '/media/'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     STATIC_ROOT = os.path.join(TOP_DIR, 'staticfiles')
     STATICFILES_DIRS = (
         os.path.join(TOP_DIR, 'static'),
     )
-    STATIC_URL = '/static/'
-    STATICFILES_LOCATION = 'static'
-    MEDIAFILES_LOCATION = 'media'
+    AWS_S3_KEY_PREFIX = 'media'
+    AWS_S3_KEY_PREFIX_STATIC = 'static'
     AWS_HEADERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
         'Cache-Control': 'max-age=94608000',
     }
-    AWS_STORAGE_BUCKET_NAME = 'flamingo-photo'
-    AWS_S3_CUSTOM_DOMAIN = '{bucket}.s3.amazonaws.com'.format(bucket=AWS_STORAGE_BUCKET_NAME)
     MAXIMUM_IMAGE_SIZE = 2 * 1024 * 1024 # 2MB
+
+    @property
+    def MEDIA_URL(self):
+        return '{aws_s3}/{media}/'.format(
+            aws_s3=aws_s3_bucket_url(self, 'AWS_S3_BUCKET_NAME'),
+            media=self.AWS_S3_KEY_PREFIX
+        )
+
+    @property
+    def STATIC_URL(self):
+        return '{aws_s3}/{static}/'.format(
+            aws_s3=aws_s3_bucket_url(self, 'AWS_S3_BUCKET_NAME_STATIC'),
+            static=self.AWS_S3_KEY_PREFIX_STATIC
+        )
 
     # Authentication
     LOGIN_URL = '/login/'
