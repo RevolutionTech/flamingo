@@ -1,6 +1,6 @@
 coverage==4.5.1
 gunicorn==19.9.0
-Django==1.11.15
+Django==1.11.16
 django-pigeon==0.3.0
 python-memcached==1.59
 psycopg2==2.7.6.1
