@@ -70,7 +70,7 @@ class ContestDetailsView(TemplateView):
         context = super(ContestDetailsView, self).get_context_data(**kwargs)
 
         user_authenticated = self.request.user.is_authenticated
-        contest = Contest.objects.get(slug=slug)
+        contest = get_object_or_404(Contest, slug=slug)
 
         context['contest'] = contest
         context['user_authenticated'] = user_authenticated
