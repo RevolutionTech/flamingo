@@ -1,4 +1,4 @@
-coverage==4.5.2
+coverage==4.5.3
 gunicorn==19.9.0
 Django==2.1.7
 django-pigeon==0.3.0
