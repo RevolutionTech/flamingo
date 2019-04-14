@@ -6,7 +6,6 @@ from flamingo.settings.base import BaseSettings
 class ProdSettings(BaseSettings):
 
     DEBUG = False
-    ALLOWED_HOSTS = ['*',] # Heroku handles this under the hood
 
     # Static and media files
     DEFAULT_FILE_STORAGE = 'django_s3_storage.storage.S3Storage'
@@ -21,14 +20,3 @@ class ProdSettings(BaseSettings):
     @property
     def AWS_SECRET_ACCESS_KEY(self):
         return os.environ['FLAMINGO_AWS_SECRET_ACCESS_KEY']
-
-    # Sentry
-    @property
-    def RAVEN_CONFIG(self):
-        return {
-            'dsn': 'https://{public_key}:{secret_key}@app.getsentry.com/{project_id}'.format(
-                public_key='7404ed97fa2044418aa231daa72658fc',
-                secret_key=os.environ['FLAMINGO_RAVEN_SECRET_KEY'],
-                project_id='64150',
-            ),
-        }

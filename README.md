@@ -29,7 +29,7 @@ In the future you can reactivate the virtual environment with:
 
 ### Installation
 
-Then in your virtual environment, you will need to install Python dependencies such as [Gunicorn](http://gunicorn.org/), [django](https://www.djangoproject.com/), python-memcached, psycopg2, [pillow](https://pillow.readthedocs.org/), django-classbasedsettings, and [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/). You can do this simply with the command:
+Then in your virtual environment, you will need to install Python dependencies such as [django](https://www.djangoproject.com/), python-memcached, psycopg2, [pillow](https://pillow.readthedocs.org/), django-classbasedsettings, and [sorl-thumbnail](http://sorl-thumbnail.readthedocs.org/). You can do this simply with the command:
 
     pip install -r requirements.txt
 
@@ -55,18 +55,8 @@ With everything installed and all files in place, you may now create the databas
 
 ### Deployment
 
-In your production environment, you will need to create a directory under `flamingo/flamingo/settings` called `secrets` and place all of the flamingo environment variables in that directory, where the key of the variable is the name of the file and the value of the variable is the content in the file. In addition to the environment variables for the development environment, you will also need to provide a few additional environment variables. `FLAMINGO_ENV` should be set to `PROD`, `FLAMINGO_RAVEN_SECRET_KEY` should be the secret key in the Sentry DSN, `FLAMINGO_AWS_ACCESS_KEY_ID` should be set to the AWS Access Key ID of the user that has access to the S3 bucket being used for the production Flamingo instance, and `FLAMINGO_AWS_SECRET_ACCESS_KEY` should be set to the AWS Access Key's secret:
+In your production environment, you will need to set additional environment variables in addition to the ones needed for development. `FLAMINGO_ENV` should be set to `PROD`, `FLAMINGO_AWS_ACCESS_KEY_ID` should be set to the AWS Access Key ID of the user that has access to the S3 bucket being used for the production Flamingo instance, and `FLAMINGO_AWS_SECRET_ACCESS_KEY` should be set to the AWS Access Key's secret:
 
-    cd flamingo/settings
-    mkdir secrets
-    cd secrets
-    echo 'PROD' > FLAMINGO_ENV
-    echo 'abc123' > FLAMINGO_RAVEN_SECRET_KEY
-    echo 'xyz' > FLAMINGO_AWS_ACCESS_KEY_ID
-    echo 'abc123' > FLAMINGO_AWS_SECRET_ACCESS_KEY
-
-For reference, the format of the Sentry DSN is as follows:
-
-    {PROTOCOL}://{PUBLIC_KEY}:{SECRET_KEY}@{HOST}/{PATH}{PROJECT_ID}
-
-Flamingo is now ready to be deployed to Heroku (or some other service with a few modifications).
+    export FLAMINGO_ENV='PROD'
+    export FLAMINGO_AWS_ACCESS_KEY_ID='xyz'
+    export FLAMINGO_AWS_SECRET_ACCESS_KEY='abc123'

@@ -35,7 +35,6 @@ class BaseSettings(DjangoDefaults):
         'django.contrib.messages',
         'whitenoise.runserver_nostatic',
         'django.contrib.staticfiles',
-        'raven.contrib.django.raven_compat',
         'sorl.thumbnail',
         'django_s3_storage',
         'users.apps.UsersConfig',

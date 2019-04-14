@@ -3,6 +3,5 @@ source = ./
 
 # Omit files from coverage that only run on prod
 omit =
-    flamingo/gunicorn.py
     flamingo/settings/prod.py
     flamingo/wsgi.py
