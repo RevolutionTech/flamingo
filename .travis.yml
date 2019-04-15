@@ -5,8 +5,10 @@ python:
 addons:
   postgresql: "9.6"
 
+before_install:
+  - pip install poetry
 install:
-  - pip install -r requirements.txt
+  - poetry install
 
 before_script:
   - psql -c "CREATE DATABASE flamingo;" -U postgres
@@ -14,9 +16,9 @@ before_script:
 
 script:
   - cd flamingo
-  - python manage.py migrate
-  - python manage.py collectstatic --no-input
-  - coverage run ./manage.py test
+  - poetry run python manage.py migrate
+  - poetry run python manage.py collectstatic --no-input
+  - poetry run coverage run ./manage.py test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

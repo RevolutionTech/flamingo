@@ -1,5 +1,0 @@
-# see https://pyup.io/docs/configuration/ for all available options
-schedule: "every two weeks"
-assignees: RevolutionTech
-branch_prefix: upgrade/
-pr_prefix: "UPGRADE:"

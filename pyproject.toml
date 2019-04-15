@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "flamingo"
+version = "0.1.0"
+description = "A photo contest web application."
+authors = ["Lucas Connors <lucas@revolutiontech.ca>"]
+license = "ISC"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Django = "~2.1.7"
+psycopg2 = "=2.7.7"
+Pillow = "^5.4.1"
+django-classbasedsettings = "^1.5.0"
+python-memcached = "^1.59"
+dj-database-url = "^0.5.0"
+sorl-thumbnail = "^12.5.0"
+whitenoise = "^4.1.2"
+django-s3-storage = "^0.12.4"
+
+[tool.poetry.dev-dependencies]
+coverage = "^4.5.3"
+django-pigeon = "^0.3.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
