@@ -10,9 +10,7 @@
 
 ### Prerequisites
 
-Flamingo requires [memcached](http://memcached.org/), [PostgreSQL](http://www.postgresql.org/), libjpeg-dev, and Python header files, which you can install on debian with:
-
-    sudo apt-get install memcached postgresql postgresql-contrib python3-dev libssl-dev libpq-dev libjpeg-dev
+Flamingo requires [PostgreSQL](https://www.postgresql.org/) and [memcached](http://memcached.org/) to be installed.
 
 ### Installation
 
