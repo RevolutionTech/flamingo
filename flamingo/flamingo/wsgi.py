@@ -12,7 +12,10 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 import cbsettings
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 os.environ.setdefault("DJANGO_SETTINGS_FACTORY", "flamingo.settings")
 cbsettings.configure('flamingo.settings.switcher')
