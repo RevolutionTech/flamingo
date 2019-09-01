@@ -11,19 +11,13 @@ from users.exceptions import UserAlreadyExistsException
 
 
 class UserProfileManager(models.Manager):
-
-    def create_account(self,
-        username,
-        email,
-        password,
-        first_name=None,
-        last_name=None
+    def create_account(
+        self, username, email, password, first_name=None, last_name=None
     ):
         # Verify that email is unique
         if User.objects.filter(email=email).exists():
             raise UserAlreadyExistsException(
-                "A user with the email {email} already exists."
-                .format(email=email)
+                "A user with the email {email} already exists.".format(email=email)
             )
 
         # Create user object
@@ -31,8 +25,9 @@ class UserProfileManager(models.Manager):
             user = User.objects.create_user(username, email, password)
         except IntegrityError:
             raise UserAlreadyExistsException(
-                "A user with the username {username} already exists."
-                .format(username=username)
+                "A user with the username {username} already exists.".format(
+                    username=username
+                )
             )
         if first_name or last_name:
             if first_name:

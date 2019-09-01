@@ -9,21 +9,44 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('contest', '0002_entry'),
+        ("contest", "0002_entry"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Vote',
+            name="Vote",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vote_type', models.PositiveSmallIntegerField(choices=[(0, b'Downvote'), (1, b'Upvote')], db_index=True)),
-                ('entry', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contest.Entry')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "vote_type",
+                    models.PositiveSmallIntegerField(
+                        choices=[(0, b"Downvote"), (1, b"Upvote")], db_index=True
+                    ),
+                ),
+                (
+                    "entry",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="contest.Entry"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AlterUniqueTogether(
-            name='vote',
-            unique_together=set([('entry', 'user')]),
+            name="vote", unique_together=set([("entry", "user")])
         ),
     ]

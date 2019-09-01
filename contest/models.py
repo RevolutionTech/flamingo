@@ -26,7 +26,7 @@ class Sponsor(models.Model):
         return self.name
 
     def url(self):
-        return reverse('sponsor_details', kwargs={'slug': self.slug})
+        return reverse("sponsor_details", kwargs={"slug": self.slug})
 
 
 class Contest(models.Model):
@@ -40,16 +40,13 @@ class Contest(models.Model):
     end = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return "{sponsor}: {name}".format(
-            sponsor=str(self.sponsor),
-            name=self.name
-        )
+        return "{sponsor}: {name}".format(sponsor=str(self.sponsor), name=self.name)
 
     def url(self):
-        return reverse('contest_details', kwargs={'slug': self.slug})
+        return reverse("contest_details", kwargs={"slug": self.slug})
 
     def upload_photo_url(self):
-        return reverse('contest_upload_photo', kwargs={'slug': self.slug})
+        return reverse("contest_upload_photo", kwargs={"slug": self.slug})
 
 
 @receiver(pre_save, sender=Contest)
@@ -57,8 +54,9 @@ def contest_pre_save(sender, instance, *args, **kwargs):
     if not instance.submission_open:
         instance.submission_open = timezone.now()
     if not instance.submission_close:
-        instance.submission_close = instance.submission_open + \
-            datetime.timedelta(days=7)
+        instance.submission_close = instance.submission_open + datetime.timedelta(
+            days=7
+        )
     if not instance.end:
         instance.end = instance.submission_close + datetime.timedelta(days=7)
 
@@ -82,18 +80,12 @@ class Entry(models.Model):
 
     def vote(self, user, vote_type):
         Vote.objects.update_or_create(
-            entry=self,
-            user=user,
-            defaults={'vote_type': vote_type}
+            entry=self, user=user, defaults={"vote_type": vote_type}
         )
         return self.vote_count()
 
     def has_voted(self, user, vote_type):
-        return Vote.objects.filter(
-            entry=self,
-            user=user,
-            vote_type=vote_type
-        ).exists()
+        return Vote.objects.filter(entry=self, user=user, vote_type=vote_type).exists()
 
     def upvote(self, user):
         return self.vote(user, Vote.UPVOTE)
@@ -111,24 +103,18 @@ class Entry(models.Model):
 class Vote(models.Model):
     DOWNVOTE = 0
     UPVOTE = 1
-    VOTE_CHOICES = (
-        (DOWNVOTE, 'Downvote'),
-        (UPVOTE, 'Upvote'),
-    )
+    VOTE_CHOICES = ((DOWNVOTE, "Downvote"), (UPVOTE, "Upvote"))
 
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    vote_type = models.PositiveSmallIntegerField(
-        choices=VOTE_CHOICES,
-        db_index=True
-    )
+    vote_type = models.PositiveSmallIntegerField(choices=VOTE_CHOICES, db_index=True)
 
     class Meta:
-        unique_together = (('entry', 'user',),)
+        unique_together = (("entry", "user"),)
 
     def __str__(self):
         return "{vote_type} by {user} for {entry}".format(
             vote_type=self.get_vote_type_display(),
             entry=str(self.entry),
-            user=str(self.user)
+            user=str(self.user),
         )

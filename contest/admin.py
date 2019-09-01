@@ -10,11 +10,11 @@ from contest.models import Sponsor, Contest, Entry
 
 
 class SponsorAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class ContestAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
+    prepopulated_fields = {"slug": ("name",)}
 
 
 admin.site.register(Sponsor, SponsorAdmin)

@@ -13,7 +13,6 @@ from users.models import UserProfile
 
 
 class UserTestCase(FlamingoTransactionTestCase):
-
     def testCreateAccount(self):
         UserProfile.objects.all().delete()
         UserProfile.objects.create_account(
@@ -27,44 +26,29 @@ class UserTestCase(FlamingoTransactionTestCase):
         self.assertEqual(UserProfile.objects.all().count(), 1)
         created_user_profile = UserProfile.objects.get()
         created_user_profile.bio = self.USER_PROFILE_BIO
+        self.assertEqual(str(created_user_profile), self.CREATED_USER_USERNAME)
+        self.assertEqual(created_user_profile.user.username, self.CREATED_USER_USERNAME)
+        self.assertEqual(created_user_profile.user.email, self.CREATED_USER_EMAIL)
         self.assertEqual(
-            str(created_user_profile),
-            self.CREATED_USER_USERNAME
+            created_user_profile.user.first_name, self.CREATED_USER_FIRST_NAME
         )
         self.assertEqual(
-            created_user_profile.user.username,
-            self.CREATED_USER_USERNAME
-        )
-        self.assertEqual(
-            created_user_profile.user.email,
-            self.CREATED_USER_EMAIL
-        )
-        self.assertEqual(
-            created_user_profile.user.first_name,
-            self.CREATED_USER_FIRST_NAME
-        )
-        self.assertEqual(
-            created_user_profile.user.last_name,
-            self.CREATED_USER_LAST_NAME
+            created_user_profile.user.last_name, self.CREATED_USER_LAST_NAME
         )
         self.assertEqual(
             created_user_profile.full_name(),
             "{first} {last}".format(
-                first=self.CREATED_USER_FIRST_NAME,
-                last=self.CREATED_USER_LAST_NAME
-            )
+                first=self.CREATED_USER_FIRST_NAME, last=self.CREATED_USER_LAST_NAME
+            ),
         )
-        self.assertEqual(
-            created_user_profile.bio,
-            self.USER_PROFILE_BIO
-        )
+        self.assertEqual(created_user_profile.bio, self.USER_PROFILE_BIO)
 
     def testDeletedAccountAvailableAgain(self):
         self.user_profile.delete()
         UserProfile.objects.create_account(
             username=self.USER_USERNAME,
             email=self.USER_EMAIL,
-            password=self.USER_PASSWORD
+            password=self.USER_PASSWORD,
         )
         self.assertEqual(User.objects.all().count(), 1)
         self.assertEqual(UserProfile.objects.all().count(), 1)
@@ -74,7 +58,7 @@ class UserTestCase(FlamingoTransactionTestCase):
             UserProfile.objects.create_account(
                 username=self.USER_USERNAME,
                 email=self.CREATED_USER_EMAIL,
-                password=self.USER_PASSWORD
+                password=self.USER_PASSWORD,
             )
 
     def testCannotCreateAccountWithTakenEmail(self):
@@ -82,175 +66,158 @@ class UserTestCase(FlamingoTransactionTestCase):
             UserProfile.objects.create_account(
                 username=self.CREATED_USER_USERNAME,
                 email=self.USER_EMAIL,
-                password=self.USER_PASSWORD
+                password=self.USER_PASSWORD,
             )
 
 
 class UserAdminWebTestCase(FlamingoTestCase):
-
     def get200s(self):
         return [
-            '/admin/users/',
-            '/admin/users/userprofile/',
-            '/admin/users/userprofile/add/',
-            '/admin/users/userprofile/{userprofile_id}/change/'.format(
+            "/admin/users/",
+            "/admin/users/userprofile/",
+            "/admin/users/userprofile/add/",
+            "/admin/users/userprofile/{userprofile_id}/change/".format(
                 userprofile_id=self.user_profile.id
             ),
         ]
 
 
 class RegisterFormTestCase(FlamingoTestCase):
-
     def testUsernameAlreadyTaken(self):
         form_data = {
-            'username': self.USER_USERNAME,
-            'email': self.CREATED_USER_EMAIL,
-            'password': self.USER_PASSWORD,
-            'password_confirm': self.USER_PASSWORD,
+            "username": self.USER_USERNAME,
+            "email": self.CREATED_USER_EMAIL,
+            "password": self.USER_PASSWORD,
+            "password_confirm": self.USER_PASSWORD,
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('username', form.errors)
+        self.assertIn("username", form.errors)
 
     def testEmailAlreadyRegistered(self):
         form_data = {
-            'username': self.CREATED_USER_USERNAME,
-            'email': self.USER_EMAIL,
-            'password': self.USER_PASSWORD,
-            'password_confirm': self.USER_PASSWORD,
+            "username": self.CREATED_USER_USERNAME,
+            "email": self.USER_EMAIL,
+            "password": self.USER_PASSWORD,
+            "password_confirm": self.USER_PASSWORD,
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('email', form.errors)
+        self.assertIn("email", form.errors)
 
     def testPasswordsDoNotMatch(self):
         form_data = {
-            'username': self.CREATED_USER_USERNAME,
-            'email': self.CREATED_USER_EMAIL,
-            'password': self.USER_PASSWORD,
-            'password_confirm': "oops123",
+            "username": self.CREATED_USER_USERNAME,
+            "email": self.CREATED_USER_EMAIL,
+            "password": self.USER_PASSWORD,
+            "password_confirm": "oops123",
         }
         form = RegisterForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-        self.assertEqual(len(form.errors['__all__']), 1)
-        (error,) = form.errors['__all__']
-        self.assertIn('Password', error)
-        self.assertIn('not match', error)
+        self.assertIn("__all__", form.errors)
+        self.assertEqual(len(form.errors["__all__"]), 1)
+        (error,) = form.errors["__all__"]
+        self.assertIn("Password", error)
+        self.assertIn("not match", error)
 
 
 class RegisterWebTestCase(FlamingoTestCase):
-
     def testRegisterPageRenders(self):
         self.client.logout()
-        self.assertResponseRenders('/register')
+        self.assertResponseRenders("/register")
 
     def testUserRegisters(self):
         self.client.logout()
         UserProfile.objects.all().delete()
-        self.assertResponseRenders('/register')
+        self.assertResponseRenders("/register")
         payload = {
-            'username': self.CREATED_USER_USERNAME,
-            'email': self.CREATED_USER_EMAIL,
-            'password': self.USER_PASSWORD,
-            'password_confirm': self.USER_PASSWORD,
-            'first_name': self.CREATED_USER_FIRST_NAME,
-            'last_name': self.CREATED_USER_LAST_NAME,
+            "username": self.CREATED_USER_USERNAME,
+            "email": self.CREATED_USER_EMAIL,
+            "password": self.USER_PASSWORD,
+            "password_confirm": self.USER_PASSWORD,
+            "first_name": self.CREATED_USER_FIRST_NAME,
+            "last_name": self.CREATED_USER_LAST_NAME,
         }
-        self.assertResponseRedirects('/register', '/', method='POST', data=payload)
+        self.assertResponseRedirects("/register", "/", method="POST", data=payload)
         self.assertEqual(UserProfile.objects.all().count(), 1)
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        self.assertResponseRedirects('/register', '/')
+        self.assertResponseRedirects("/register", "/")
 
 
 class LoginFormTestCase(FlamingoTestCase):
 
-    UNCREATED_USER_USERNAME = 'UncreatedUser'
-    UNCREATED_USER_EMAIL = 'uncreated@example.com'
+    UNCREATED_USER_USERNAME = "UncreatedUser"
+    UNCREATED_USER_EMAIL = "uncreated@example.com"
 
     def testUsernameDoesNotExist(self):
         form_data = {
-            'username': self.UNCREATED_USER_USERNAME,
-            'password': self.USER_PASSWORD,
+            "username": self.UNCREATED_USER_USERNAME,
+            "password": self.USER_PASSWORD,
         }
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-        self.assertEqual(len(form.errors['__all__']), 1)
-        (error,) = form.errors['__all__']
+        self.assertIn("__all__", form.errors)
+        self.assertEqual(len(form.errors["__all__"]), 1)
+        (error,) = form.errors["__all__"]
         self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
     def testEmailDoesNotExist(self):
         form_data = {
-            'username': self.UNCREATED_USER_EMAIL,
-            'password': self.USER_PASSWORD,
+            "username": self.UNCREATED_USER_EMAIL,
+            "password": self.USER_PASSWORD,
         }
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-        self.assertEqual(len(form.errors['__all__']), 1)
-        (error,) = form.errors['__all__']
+        self.assertIn("__all__", form.errors)
+        self.assertEqual(len(form.errors["__all__"]), 1)
+        (error,) = form.errors["__all__"]
         self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
     def testPasswordIncorrect(self):
-        form_data = {
-            'username': self.USER_USERNAME,
-            'password': 'oops123',
-        }
+        form_data = {"username": self.USER_USERNAME, "password": "oops123"}
         form = LoginForm(form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('__all__', form.errors)
-        self.assertEqual(len(form.errors['__all__']), 1)
-        (error,) = form.errors['__all__']
+        self.assertIn("__all__", form.errors)
+        self.assertEqual(len(form.errors["__all__"]), 1)
+        (error,) = form.errors["__all__"]
         self.assertEqual(error, LoginForm.FAILED_AUTH_WARNING)
 
 
 class LoginWebTestCase(FlamingoTestCase):
-
     def testLoginPageRenders(self):
         self.client.logout()
-        self.assertResponseRenders('/login')
+        self.assertResponseRenders("/login")
 
     def testUserLogsIn(self):
         self.client.logout()
-        self.assertResponseRenders('/login')
-        payload = {
-            'username': self.USER_USERNAME,
-            'password': self.USER_PASSWORD,
-        }
-        self.assertResponseRedirects('/login', '/', method='POST', data=payload)
+        self.assertResponseRenders("/login")
+        payload = {"username": self.USER_USERNAME, "password": self.USER_PASSWORD}
+        self.assertResponseRedirects("/login", "/", method="POST", data=payload)
 
     def testUserLogsInWithEmail(self):
         self.client.logout()
-        self.assertResponseRenders('/login')
-        payload = {
-            'username': self.USER_EMAIL,
-            'password': self.USER_PASSWORD,
-        }
-        self.assertResponseRedirects('/login', '/', method='POST', data=payload)
+        self.assertResponseRenders("/login")
+        payload = {"username": self.USER_EMAIL, "password": self.USER_PASSWORD}
+        self.assertResponseRedirects("/login", "/", method="POST", data=payload)
 
     def testRedirectsAuthenticatedUsersToHome(self):
-        self.assertResponseRedirects('/login', '/')
+        self.assertResponseRedirects("/login", "/")
 
 
 class LogoutWebTestCase(FlamingoTestCase):
-
     def testRedirectsAfterLogoutToLogin(self):
-        self.assertResponseRedirects('/logout', '/login')
+        self.assertResponseRedirects("/logout", "/login")
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        self.assertResponseRedirects('/logout', '/login')
+        self.assertResponseRedirects("/logout", "/login")
 
 
 class ProfileWebTestCase(FlamingoTestCase):
-
     def get200s(self):
-        return [
-            '/profile',
-        ]
+        return ["/profile"]
 
     def testRedirectsUnauthenticatedUsersToLogin(self):
         self.client.logout()
-        self.assertResponseRedirects('/profile', '/login/')
+        self.assertResponseRedirects("/profile", "/login/")

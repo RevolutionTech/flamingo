@@ -11,7 +11,7 @@ from users.models import UserProfile
 
 class UserProfileAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'username', 'email', 'full_name',)
+    list_display = ("id", "username", "email", "full_name")
 
     def username(self, userprofile):
         return userprofile.user.username

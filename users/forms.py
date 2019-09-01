@@ -21,7 +21,7 @@ class RegisterForm(forms.Form):
     def clean_username(self):
         """ Verify that the username is not already taken """
 
-        username = self.cleaned_data['username']
+        username = self.cleaned_data["username"]
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError(
                 "Sorry! An account with this username already exists."
@@ -31,7 +31,7 @@ class RegisterForm(forms.Form):
     def clean_email(self):
         """ Verify that the email is not already registered """
 
-        email = self.cleaned_data['email']
+        email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError(
                 "An account with this email address already exists."
@@ -47,8 +47,8 @@ class RegisterForm(forms.Form):
         cleaned_data = super(RegisterForm, self).clean()
 
         if not self.errors:
-            password = cleaned_data.get('password')
-            password_confirm = cleaned_data.get('password_confirm')
+            password = cleaned_data.get("password")
+            password_confirm = cleaned_data.get("password_confirm")
 
             if password != password_confirm:
                 raise forms.ValidationError(
@@ -82,7 +82,7 @@ class LoginForm(forms.Form):
                 return User.objects.get(email=email)
             except User.DoesNotExist:
                 raise forms.ValidationError(cls.FAILED_AUTH_WARNING)
-        else: # username
+        else:  # username
             try:
                 return User.objects.get(username=username)
             except User.DoesNotExist:
@@ -94,12 +94,12 @@ class LoginForm(forms.Form):
         cleaned_data = super(LoginForm, self).clean()
 
         if not self.errors:
-            email_or_username = cleaned_data.get('username')
-            password = cleaned_data.get('password')
+            email_or_username = cleaned_data.get("username")
+            password = cleaned_data.get("password")
             user = self.user_from_email_or_username(email_or_username)
             if user and user.check_password(password):
-                cleaned_data['email'] = user.email
-                cleaned_data['username'] = user.username
+                cleaned_data["email"] = user.email
+                cleaned_data["username"] = user.username
             else:
                 raise forms.ValidationError(self.FAILED_AUTH_WARNING)
 

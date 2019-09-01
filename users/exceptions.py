@@ -4,5 +4,6 @@
 
 """
 
+
 class UserAlreadyExistsException(UserWarning):
     pass

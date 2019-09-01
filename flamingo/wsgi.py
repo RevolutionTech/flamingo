@@ -18,6 +18,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 os.environ.setdefault("DJANGO_SETTINGS_FACTORY", "flamingo.settings")
-cbsettings.configure('flamingo.settings.switcher')
+cbsettings.configure("flamingo.settings.switcher")
 
 application = get_wsgi_application()
