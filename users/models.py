@@ -24,8 +24,7 @@ class UserProfile(models.Model):
 
     def full_name(self):
         return u"{first} {last}".format(
-            first=self.user.first_name,
-            last=self.user.last_name
+            first=self.user.first_name, last=self.user.last_name
         ).strip()
 
 

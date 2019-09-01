@@ -16,7 +16,7 @@ def redirect_authenticated(func):
     @functools.wraps(func)
     def wrapper(request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('home'))
+            return HttpResponseRedirect(reverse("home"))
         return func(request, *args, **kwargs)
 
     return wrapper
@@ -29,8 +29,7 @@ def authenticated_or_401(func):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return HttpResponse(
-                "You must be logged in to perform this action.",
-                status=401
+                "You must be logged in to perform this action.", status=401
             )
         return func(request, *args, **kwargs)
 
