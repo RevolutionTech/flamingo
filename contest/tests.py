@@ -144,7 +144,7 @@ class ContestAdminWebTestCase(FlamingoTestCase):
             ),
             "/admin/contest/entry/",
             "/admin/contest/entry/add/",
-            "/admin/contest/entry/{entry_id}/change/".format(entry_id=self.entry.id),
+            f"/admin/contest/entry/{self.entry.id}/change/",
         ]
 
 
@@ -159,7 +159,7 @@ class HomeWebTestCase(FlamingoTestCase):
 
 class SponsorDetailsWebTestCase(FlamingoTestCase):
     def setUp(self):
-        super(SponsorDetailsWebTestCase, self).setUp()
+        super().setUp()
         self.sponsor_details_url = "/sponsor/details/{sponsor_slug}".format(
             sponsor_slug=self.sponsor.slug
         )
@@ -174,7 +174,7 @@ class SponsorDetailsWebTestCase(FlamingoTestCase):
 
 class ContestDetailsWebTestCase(FlamingoTestCase):
     def setUp(self):
-        super(ContestDetailsWebTestCase, self).setUp()
+        super().setUp()
         self.contest_details_url = "/contest/details/{contest_slug}".format(
             contest_slug=self.contest.slug
         )
@@ -201,7 +201,7 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
     PHOTO_NONIMAGE_FILENAME = "nonimage.jpg"
 
     def setUp(self):
-        super(ContestUploadPhotoTestCase, self).setUp()
+        super().setUp()
         self.contest_upload_url = "/contest/upload/{contest_slug}".format(
             contest_slug=self.contest.slug
         )

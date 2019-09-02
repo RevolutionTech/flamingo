@@ -17,7 +17,7 @@ class UserProfileManager(models.Manager):
         # Verify that email is unique
         if User.objects.filter(email=email).exists():
             raise UserAlreadyExistsException(
-                "A user with the email {email} already exists.".format(email=email)
+                f"A user with the email {email} already exists."
             )
 
         # Create user object

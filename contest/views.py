@@ -26,7 +26,7 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         now = timezone.now()
         context["contests_submission_open"] = Contest.objects.filter(
             submission_open__lte=now, submission_close__gt=now
@@ -43,7 +43,7 @@ class SponsorDetailsView(TemplateView):
     template_name = "sponsor_details.html"
 
     def get_context_data(self, slug, **kwargs):
-        context = super(SponsorDetailsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["sponsor"] = Sponsor.objects.get(slug=slug)
         return context
 
@@ -69,7 +69,7 @@ class ContestDetailsView(TemplateView):
         }
 
     def get_context_data(self, slug, **kwargs):
-        context = super(ContestDetailsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         user_authenticated = self.request.user.is_authenticated
         contest = get_object_or_404(Contest, slug=slug)
