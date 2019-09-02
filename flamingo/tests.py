@@ -17,7 +17,7 @@ from photo.models import Photo
 from contest.models import Sponsor, Contest, Entry
 
 
-class FlamingoBaseTestCase(object):
+class FlamingoBaseTestCase:
 
     NOW = timezone.now()
     USER_USERNAME = "jsmith"
@@ -63,8 +63,8 @@ class FlamingoBaseTestCase(object):
         photo_full_filename = os.path.join(cls.TEST_PHOTOS_DIR, filename)
         try:
             image_content = open(photo_full_filename, "rb").read()
-        except IOError:
-            raise IOError(
+        except OSError:
+            raise OSError(
                 'Test photo "{filename}" missing or could not be read.'.format(
                     filename=filename
                 )
@@ -124,7 +124,7 @@ class FlamingoBaseTestCase(object):
         self.entry = Entry.objects.create(contest=self.contest, photo=self.photo)
 
     def setUp(self):
-        super(FlamingoBaseTestCase, self).setUp()
+        super().setUp()
         self.setup_user()
         self.create_first_instances()
 

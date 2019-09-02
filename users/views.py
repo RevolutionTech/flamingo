@@ -21,10 +21,10 @@ class RegisterView(FormView):
 
     def dispatch(self, request):
         self.success_url = request.GET.get("next", reverse("home"))
-        return super(RegisterView, self).dispatch(request)
+        return super().dispatch(request)
 
     def get_context_data(self, **kwargs):
-        context = super(RegisterView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["redirect_url"] = self.success_url
         return context
 
@@ -41,7 +41,7 @@ class RegisterView(FormView):
         user = authenticate(username=username, password=password)
         if user:
             auth_login(self.request, user)
-            return super(RegisterView, self).form_valid(form)
+            return super().form_valid(form)
 
 
 class LoginView(FormView):
@@ -51,10 +51,10 @@ class LoginView(FormView):
 
     def dispatch(self, request):
         self.success_url = request.GET.get("next", reverse("home"))
-        return super(LoginView, self).dispatch(request)
+        return super().dispatch(request)
 
     def get_context_data(self, **kwargs):
-        context = super(LoginView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["redirect_url"] = self.success_url
         return context
 
@@ -64,7 +64,7 @@ class LoginView(FormView):
         user = authenticate(username=username, password=password)
         if user:
             auth_login(self.request, user)
-            return super(LoginView, self).form_valid(form)
+            return super().form_valid(form)
 
 
 def logout(request):
@@ -77,6 +77,6 @@ class ProfileView(TemplateView):
     template_name = "profile.html"
 
     def get_context_data(self, **kwargs):
-        context = super(ProfileView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["user_profile"] = self.request.user.userprofile
         return context

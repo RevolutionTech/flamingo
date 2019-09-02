@@ -45,5 +45,5 @@ class PhotoAdminWebTestCase(FlamingoTestCase):
             "/admin/photo/",
             "/admin/photo/photo/",
             "/admin/photo/photo/add/",
-            "/admin/photo/photo/{photo_id}/change/".format(photo_id=self.photo.id),
+            f"/admin/photo/photo/{self.photo.id}/change/",
         ]
