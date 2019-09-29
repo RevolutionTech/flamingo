@@ -218,7 +218,7 @@ description = "A tool to automatically upgrade syntax for newer versions."
 name = "pyupgrade"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "1.23.0"
+version = "1.24.0"
 
 [package.dependencies]
 tokenize-rt = ">=3.2.0"
@@ -292,7 +292,7 @@ python-versions = "*"
 version = "4.1.3"
 
 [metadata]
-content-hash = "89da82ca36767d71325a9b5e470345d7e8a9d00ee2ad6982e7462b925c5e4f26"
+content-hash = "053e30648734b23da1738b0dc345eb51a0b851d8182837bda1667637580ca337"
 python-versions = "^3.6"
 
 [metadata.hashes]
@@ -317,7 +317,7 @@ python-dateutil = ["7e6584c74aeed623791615e26efd690f29817a27c73085b78e4bad02493d
 python-dotenv = ["debd928b49dbc2bf68040566f55cdb3252458036464806f4094487244e2a4093", "f157d71d5fec9d4bd5f51c82746b6344dffa680ee85217c123f4a0c8117c4544"]
 python-memcached = ["4dac64916871bd3550263323fc2ce18e1e439080a2d5670c594cf3118d99b594", "a2e28637be13ee0bf1a8b6843e7490f9456fd3f2a4cb60471733c7b5d5557e4f"]
 pytz = ["303879e36b721603cc54604edcac9d20401bdbe31e1e4fdee5b9f98d5d31dfda", "d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"]
-pyupgrade = ["c2e755fb1628e4364680beadbadd67a4af82a2fe6fb1fcda00987dced381d0d4", "cdf7a1c204cb3f276818d36bdc67ff78efa435c9de4ce676fb6530eb86a917ef"]
+pyupgrade = ["4911c7de221294ecd2ee5acea8d2d9a95422789bea927ab41e3cf982612d3e46", "b185ee4412a071819cfbc750c5f44d32e21db6f1ef2e4102ac3688bd6ed58f29"]
 s3transfer = ["7b9ad3213bff7d357f888e0fab5101b56fa1a0548ee77d121c3a3dbfbef4cb2e", "f23d5cb7d862b104401d9021fc82e5fa0e0cf57b7660a1331425aab0c691d021"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]
 sorl-thumbnail = ["8dfe5fda91a5047d1d35a0b9effe7b000764a01d648e15ca076f44e9c34b6dbd", "d9e3f018d19293824803e4ffead96b19dfcd44fa7987cea392f50436817bef34"]
