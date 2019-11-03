@@ -21,7 +21,7 @@ python-dotenv = "^0.10.3"
 [tool.poetry.dev-dependencies]
 coverage = "^4.5.4"
 django-pigeon = "^0.3.0"
-black = {version = "^19.3b0",allows-prereleases = true}
+black = {version = "^19.10b0",allows-prereleases = true}
 pyupgrade = "^1.24"
 
 [tool.black]
