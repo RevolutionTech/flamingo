@@ -130,7 +130,7 @@ description = "Django Amazon S3 file storage."
 name = "django-s3-storage"
 optional = false
 python-versions = "*"
-version = "0.12.5"
+version = "0.13.0"
 
 [package.dependencies]
 boto3 = ">=1.4.4,<2"
@@ -319,7 +319,7 @@ python-versions = "*"
 version = "4.1.4"
 
 [metadata]
-content-hash = "779616356d588d8acc23998eac0fc02e58b7613a9f177a70834ccf0ec4cd0ac3"
+content-hash = "38fe0bf5d364321dbfd7a40835fae5dafbe3a811c9608a0643cb290a530631d4"
 python-versions = "^3.6"
 
 [metadata.hashes]
@@ -334,7 +334,7 @@ dj-database-url = ["4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb33
 django = ["a4ad4f6f9c6a4b7af7e2deec8d0cbff28501852e5010d6c2dc695d3d1fae7ca0", "fa98ec9cc9bf5d72a08ebf3654a9452e761fbb8566e3f80de199cbc15477e891"]
 django-classbasedsettings = ["c85708a85614c671e81d75e8781691c0e69a173ea6d25e54b366d6004dd8c5ee"]
 django-pigeon = ["ae7433109d944a2236223b4f61baf8e19043fea35c0a949e1edd1fb79cc94b18"]
-django-s3-storage = ["14b8670a0d32b364f76174675904deffedb10332ad3aa2df84e98a7f6479fae9"]
+django-s3-storage = ["53c0d5a6b5064073246c120c67dbe011c16f27f77bd195573bccfd4c38756f83"]
 docutils = ["02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6", "51e64ef2ebfb29cae1faa133b3710143496eca21c530f3f71424d77687764274", "7a4bd47eaf6596e1295ecb11361139febe29b084a87bf005bf899f9a42edc3c6"]
 future = ["67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"]
 jmespath = ["3720a4b1bd659dd2eecad0666459b9788813e032b83e7ba58578e48254e0a0e6", "bde2aef6f44302dfb30320115b17d030798de8c4110e28d5cf6cf91a7a31074c"]
