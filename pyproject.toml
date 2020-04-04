@@ -22,7 +22,7 @@ python-dotenv = "^0.12.0"
 coverage = "^5.0.4"
 django-pigeon = "^0.3.0"
 black = {version = "^19.10b0",allow-prereleases = true}
-pyupgrade = "^1.26"
+pyupgrade = "^2.0"
 
 [tool.black]
 line-length = 88
