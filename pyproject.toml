@@ -7,7 +7,7 @@ license = "ISC"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-Django = "~2.2.10"
+Django = "~3.0"
 psycopg2 = "^2.8.4"
 Pillow = "^7.1.1"
 django-classbasedsettings = "^1.5.0"
