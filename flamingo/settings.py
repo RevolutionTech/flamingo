@@ -6,8 +6,7 @@
 
 import os
 
-from cbsettings import DjangoDefaults
-import dj_database_url
+from configurations import Configuration, values
 
 
 def aws_s3_bucket_url(settings_class, bucket_name_settings):
@@ -17,12 +16,10 @@ def aws_s3_bucket_url(settings_class, bucket_name_settings):
     return ""
 
 
-class BaseSettings(DjangoDefaults):
+class BaseConfig(Configuration):
 
-    BASE_DIR = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
-    SECRET_KEY = os.environ["FLAMINGO_SECRET_KEY"]
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    SECRET_KEY = values.SecretValue(environ_prefix="FLAMINGO")
 
     DEBUG = True
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
@@ -78,13 +75,11 @@ class BaseSettings(DjangoDefaults):
             "LOCATION": "127.0.0.1:11211",
         }
     }
-    DATABASES = {
-        "default": dj_database_url.config(
-            env="FLAMINGO_DATABASE_URL",
-            default="postgres://postgres@localhost/flamingo",
-            conn_max_age=500,
-        )
-    }
+    DATABASES = values.DatabaseURLValue(
+        "postgres://postgres@localhost/flamingo",
+        environ_prefix="FLAMINGO",
+        conn_max_age=500,
+    )
 
     # Internationalization
     TIME_ZONE = "UTC"
@@ -118,3 +113,16 @@ class BaseSettings(DjangoDefaults):
 
     # Authentication
     LOGIN_URL = "/login/"
+
+
+class ProdConfig(BaseConfig):
+
+    DEBUG = False
+
+    # Static and media files
+    DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+    STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
+    AWS_S3_BUCKET_NAME = "flamingo-photo"
+    AWS_S3_BUCKET_NAME_STATIC = AWS_S3_BUCKET_NAME
+    AWS_ACCESS_KEY_ID = values.SecretValue(environ_prefix="FLAMINGO")
+    AWS_SECRET_ACCESS_KEY = values.SecretValue(environ_prefix="FLAMINGO")
