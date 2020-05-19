@@ -4,13 +4,15 @@
 
 """
 
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
-from users.forms import RegisterForm, LoginForm
+from users.forms import LoginForm, RegisterForm
 from users.models import UserProfile
 
 

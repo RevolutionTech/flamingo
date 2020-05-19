@@ -9,8 +9,8 @@ import datetime
 from django.test import override_settings
 from django.utils import timezone
 
+from contest.models import Contest, Entry, Sponsor, Vote
 from flamingo.tests import FlamingoTestCase
-from contest.models import Sponsor, Contest, Entry, Vote
 
 
 class SponsorTestCase(FlamingoTestCase):

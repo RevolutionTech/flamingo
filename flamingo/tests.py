@@ -9,12 +9,11 @@ import os
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
-
 from pigeon.test import RenderTestCase, RenderTransactionTestCase
 
-from users.models import UserProfile
+from contest.models import Contest, Entry, Sponsor
 from photo.models import Photo
-from contest.models import Sponsor, Contest, Entry
+from users.models import UserProfile
 
 
 class FlamingoBaseTestCase:

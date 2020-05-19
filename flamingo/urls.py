@@ -12,15 +12,14 @@ from django.views.static import serve
 
 from contest.models import Vote
 from contest.views import (
+    ContestDetailsView,
     HomeView,
     SponsorDetailsView,
-    ContestDetailsView,
     contest_upload_photo,
     contest_vote_entry,
 )
 from users.decorators import redirect_authenticated
-from users.views import RegisterView, LoginView, logout, ProfileView
-
+from users.views import LoginView, ProfileView, RegisterView, logout
 
 urlpatterns = [
     url(r"^admin/", admin.site.urls),

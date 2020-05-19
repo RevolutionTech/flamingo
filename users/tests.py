@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from flamingo.tests import FlamingoTestCase, FlamingoTransactionTestCase
 from users.exceptions import UserAlreadyExistsException
-from users.forms import RegisterForm, LoginForm
+from users.forms import LoginForm, RegisterForm
 from users.models import UserProfile
 
 
