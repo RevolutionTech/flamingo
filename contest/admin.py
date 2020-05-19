@@ -6,7 +6,7 @@
 
 from django.contrib import admin
 
-from contest.models import Sponsor, Contest, Entry
+from contest.models import Contest, Entry, Sponsor
 
 
 class SponsorAdmin(admin.ModelAdmin):

@@ -6,16 +6,16 @@
 
 from django.http import (
     HttpResponse,
-    JsonResponse,
     HttpResponseBadRequest,
     HttpResponseNotFound,
+    JsonResponse,
 )
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
 from django.utils import timezone
+from django.views.generic import TemplateView
 
 from contest.forms import UploadPhotoForm
-from contest.models import Sponsor, Contest, Entry
+from contest.models import Contest, Entry, Sponsor
 from photo.models import Photo
 from users.decorators import authenticated_or_401
 from users.models import UserProfile
