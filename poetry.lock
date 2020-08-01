@@ -167,7 +167,7 @@ description = "Django Amazon S3 file storage."
 name = "django-s3-storage"
 optional = false
 python-versions = "*"
-version = "0.13.2"
+version = "0.13.3"
 
 [package.dependencies]
 boto3 = ">=1.4.4,<2"
@@ -372,7 +372,7 @@ version = "5.1.0"
 brotli = ["brotli"]
 
 [metadata]
-content-hash = "398bf1f9e5731a8704b0a4c5001b2eb993d6b1865adbe8955ad7b4c5e7947de2"
+content-hash = "aca8760f7a01b811dda4775776f0521fc66dee41f0be84aaab4cc0a7a41ad9fd"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -456,7 +456,7 @@ django-pigeon = [
     {file = "django-pigeon-0.3.0.tar.gz", hash = "sha256:ae7433109d944a2236223b4f61baf8e19043fea35c0a949e1edd1fb79cc94b18"},
 ]
 django-s3-storage = [
-    {file = "django-s3-storage-0.13.2.tar.gz", hash = "sha256:f938740590ab5e5189653228e52094ddacaaf0f0faf0d719ca7a0b2391906161"},
+    {file = "django-s3-storage-0.13.3.tar.gz", hash = "sha256:94fa108b272366f883355b108e6b67fc4f9e0e786523d44ac77c75505a511453"},
 ]
 docutils = [
     {file = "docutils-0.14-py2-none-any.whl", hash = "sha256:7a4bd47eaf6596e1295ecb11361139febe29b084a87bf005bf899f9a42edc3c6"},
