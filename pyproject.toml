@@ -22,7 +22,7 @@ coverage = "^5.2"
 django-pigeon = "^0.3.0"
 black = "^19.10b0"
 pyupgrade = "^2.7"
-isort = "^5.2.2"
+isort = "^5.4.2"
 
 [tool.isort]
 profile = "black"
