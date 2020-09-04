@@ -20,7 +20,7 @@ django-configurations = { version = "^2.2", extras = ["database"] }
 [tool.poetry.dev-dependencies]
 coverage = "^5.2"
 django-pigeon = "^0.3.0"
-black = "^19.10b0"
+black = "^20.8b1"
 pyupgrade = "^2.7"
 isort = "^5.2.2"
 
