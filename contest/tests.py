@@ -272,34 +272,44 @@ class ContestUploadPhotoTestCase(FlamingoTestCase):
 
 class ContestVoteEntryTestCase(FlamingoTestCase):
     def testSuccessfulUpvote(self):
-        contest_upvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug=self.contest.slug, entry_id=self.entry.id
+        contest_upvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug=self.contest.slug, entry_id=self.entry.id
+            )
         )
         self.assertResponseRenders(contest_upvote_url, method="POST")
 
     def testSuccessfulDownvote(self):
-        contest_downvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/downvote/".format(
-            contest_slug=self.contest.slug, entry_id=self.entry.id
+        contest_downvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/downvote/".format(
+                contest_slug=self.contest.slug, entry_id=self.entry.id
+            )
         )
         self.assertResponseRenders(contest_downvote_url, method="POST")
 
     def testRejectUnauthenticatedUsers(self):
         self.client.logout()
-        contest_upvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug=self.contest.slug, entry_id=self.entry.id
+        contest_upvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug=self.contest.slug, entry_id=self.entry.id
+            )
         )
         self.assertResponseRenders(contest_upvote_url, status_code=401, method="POST")
 
     def testRejectInvalidContest(self):
-        contest_upvote_url = "/contest/details{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug="nonexistent-contest", entry_id=self.entry.id
+        contest_upvote_url = (
+            "/contest/details{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug="nonexistent-contest", entry_id=self.entry.id
+            )
         )
         self.assertResponseRenders(contest_upvote_url, status_code=404, method="POST")
 
     def testRejectInvalidEntry(self):
-        contest_upvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug=self.contest.slug,
-            entry_id=Entry.objects.all().order_by("-id")[0].id + 1,
+        contest_upvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug=self.contest.slug,
+                entry_id=Entry.objects.all().order_by("-id")[0].id + 1,
+            )
         )
         self.assertResponseRenders(contest_upvote_url, status_code=404, method="POST")
 
@@ -320,8 +330,10 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
             self.CREATED_PHOTO_DESCRIPTION,
         )
         new_entry = Entry.objects.create(contest=new_contest, photo=new_photo)
-        contest_upvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug=self.contest.slug, entry_id=new_entry.id
+        contest_upvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug=self.contest.slug, entry_id=new_entry.id
+            )
         )
         self.assertResponseRenders(contest_upvote_url, status_code=404, method="POST")
 
@@ -333,7 +345,9 @@ class ContestVoteEntryTestCase(FlamingoTestCase):
             self.CREATED_PHOTO_DESCRIPTION,
         )
         entry = Entry.objects.create(contest=self.ended_contest, photo=photo)
-        contest_upvote_url = "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
-            contest_slug=self.ended_contest.slug, entry_id=entry.id
+        contest_upvote_url = (
+            "/contest/details/{contest_slug}/entry/{entry_id}/upvote/".format(
+                contest_slug=self.ended_contest.slug, entry_id=entry.id
+            )
         )
         self.assertResponseRenders(contest_upvote_url, status_code=400, method="POST")
