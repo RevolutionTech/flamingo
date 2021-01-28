@@ -1,10 +1,8 @@
 # Flamingo
-### Created by: Lucas Connors
+#### A photo contest web application
 
 [![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo)
 [![codecov](https://codecov.io/gh/RevolutionTech/flamingo/branch/master/graph/badge.svg)](https://codecov.io/gh/RevolutionTech/flamingo)
-
-***
 
 ## Setup
 
@@ -24,8 +22,8 @@ Flamingo reads in environment variables from your local `.env` file. See `.env-s
 
 With everything installed and all files in place, you may now create the database tables and collect static files. You can do this with:
 
-    poetry run python manage.py migrate
-    poetry run python manage.py collectstatic
+    poetry run ./manage.py migrate
+    poetry run ./manage.py collectstatic
 
 ### Deployment
 
