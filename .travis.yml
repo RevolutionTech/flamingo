@@ -11,16 +11,12 @@ install:
   - poetry install
 
 before_script:
-  - psql -c "CREATE DATABASE flamingo;" -U postgres
+  - createdb flamingo
   - cp .env-sample .env
 
 script:
-  - poetry run pyupgrade --py38-plus $(find . -name '*.py')
-  - poetry run isort . --check
-  - poetry run black . --check
-  - poetry run python manage.py makemigrations --check  # validate no outstanding model changes
-  - poetry run python manage.py migrate
-  - poetry run python manage.py collectstatic --no-input
+  - poetry run inv check.all
+  - poetry run ./manage.py collectstatic --noinput
   - poetry run coverage run ./manage.py test
 
 after_success:
