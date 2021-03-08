@@ -1,0 +1,33 @@
+name: CI
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:9.6
+        env:
+          POSTGRES_PASSWORD: abc123
+          POSTGRES_DB: flamingo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - run: pip install poetry
+      - run: poetry install
+
+      - run: cp .env-sample .env
+      - run: poetry run inv check.all
+      - run: poetry run ./manage.py collectstatic --noinput
+      - run: poetry run coverage run ./manage.py test
+      - run: poetry run coverage xml
+      - uses: codecov/codecov-action@v1.2.1
