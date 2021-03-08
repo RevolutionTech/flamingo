@@ -1,7 +1,7 @@
 # Flamingo
 #### A photo contest web application
 
-[![Build Status](https://travis-ci.org/RevolutionTech/flamingo.svg?branch=master)](https://travis-ci.org/RevolutionTech/flamingo)
+![CI](https://github.com/RevolutionTech/flamingo/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/RevolutionTech/flamingo/branch/master/graph/badge.svg)](https://codecov.io/gh/RevolutionTech/flamingo)
 
 ## Setup
