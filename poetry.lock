@@ -131,15 +131,14 @@ testing = ["django-discover-runner", "mock", "django-cache-url (>=1.0.0)", "dj-d
 
 [[package]]
 name = "django-pigeon"
-version = "0.3.0"
+version = "0.4.0"
 description = "Test utilities for Django projects."
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6.1,<4.0.0"
 
 [package.dependencies]
-Django = ">=1.8"
-six = "*"
+Django = ">=2.2"
 
 [[package]]
 name = "django-s3-storage"
@@ -389,7 +388,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "1ccee2950d86604198c28338e873e6268294b441a99ed1a12a8f463996f79b82"
+content-hash = "d9a8f9785d6ca12dd968429ae2b64554631807de3fe234281517b43db3572999"
 
 [metadata.files]
 appdirs = [
@@ -482,7 +481,8 @@ django-configurations = [
     {file = "django_configurations-2.2-py2.py3-none-any.whl", hash = "sha256:0b93cb7042739e2d69cfc6fb81676bbd3cbb63ea19b02e8b681f4cad3a8aaf1b"},
 ]
 django-pigeon = [
-    {file = "django-pigeon-0.3.0.tar.gz", hash = "sha256:ae7433109d944a2236223b4f61baf8e19043fea35c0a949e1edd1fb79cc94b18"},
+    {file = "django-pigeon-0.4.0.tar.gz", hash = "sha256:528407a3d8e6fa1e57f79155a809f90ed882d31bd394e9244a4e0c832ebd34e4"},
+    {file = "django_pigeon-0.4.0-py3-none-any.whl", hash = "sha256:aaa94e55ff10eb4dfc157ca74bc39a64fe94d7ed0e0fb316d2778e4ff0a0e091"},
 ]
 django-s3-storage = [
     {file = "django-s3-storage-0.13.4.tar.gz", hash = "sha256:4caa2e993ca2f3762d05d6f1ab2a291cad57d08fd104e6808b6c6278204fa836"},
