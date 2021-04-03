@@ -170,7 +170,7 @@ python-versions = "*"
 
 [[package]]
 name = "isort"
-version = "5.7.0"
+version = "5.8.0"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
@@ -199,17 +199,17 @@ python-versions = "*"
 
 [[package]]
 name = "opstrich"
-version = "0.4.0"
+version = "0.6.0"
 description = "DevOps tooling, various scripts, etc."
 category = "dev"
 optional = false
 python-versions = ">=3.6.1,<4.0.0"
 
 [package.dependencies]
-black = ">=20.8b1,<21.0"
+black = "20.8b1"
 invoke = ">=1.4.1,<2.0.0"
-isort = ">=5.0,<6.0"
-pyupgrade = ">=2.7.4,<3.0.0"
+isort = "5.8.0"
+pyupgrade = "2.11.0"
 
 [[package]]
 name = "pathspec"
@@ -278,7 +278,7 @@ python-versions = "*"
 
 [[package]]
 name = "pyupgrade"
-version = "2.7.4"
+version = "2.11.0"
 description = "A tool to automatically upgrade syntax for newer versions."
 category = "dev"
 optional = false
@@ -388,7 +388,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9c30d14115415e50719b903abf86936dd94518fc101890c92af00c83c8d7f550"
+content-hash = "df1d2109815e118c181e0709702adce0300ff9f99ef619450b016e9293facbad"
 
 [metadata.files]
 appdirs = [
@@ -498,8 +498,8 @@ invoke = [
     {file = "invoke-1.5.0.tar.gz", hash = "sha256:f0c560075b5fb29ba14dad44a7185514e94970d1b9d57dcd3723bec5fed92650"},
 ]
 isort = [
-    {file = "isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"},
-    {file = "isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e"},
+    {file = "isort-5.8.0-py3-none-any.whl", hash = "sha256:2bb1680aad211e3c9944dbce1d4ba09a989f04e238296c87fe2139faa26d655d"},
+    {file = "isort-5.8.0.tar.gz", hash = "sha256:0a943902919f65c5684ac4e0154b1ad4fac6dcaa5d9f3426b732f1c8b5419be6"},
 ]
 jmespath = [
     {file = "jmespath-0.9.4-py2.py3-none-any.whl", hash = "sha256:3720a4b1bd659dd2eecad0666459b9788813e032b83e7ba58578e48254e0a0e6"},
@@ -510,8 +510,8 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
 opstrich = [
-    {file = "opstrich-0.4.0-py3-none-any.whl", hash = "sha256:2add1d8a1515c8041b309579572337fd8b4759ca16221524497767924d06d990"},
-    {file = "opstrich-0.4.0.tar.gz", hash = "sha256:47aac7316b6e58ac3ff9f67c30533ef2744de1d5d422a13886b0aee000e4ad2e"},
+    {file = "opstrich-0.6.0-py3-none-any.whl", hash = "sha256:7e90933250f12ad3bacf247479254de2d13cd5cd9575b7dd76085279503aa517"},
+    {file = "opstrich-0.6.0.tar.gz", hash = "sha256:a81408e5fdcc864b28e3f038295fffb8fee8bdee0c33768089e1dbbc2042107a"},
 ]
 pathspec = [
     {file = "pathspec-0.8.1-py2.py3-none-any.whl", hash = "sha256:aa0cb481c4041bf52ffa7b0d8fa6cd3e88a2ca4879c533c9153882ee2556790d"},
@@ -586,8 +586,8 @@ pytz = [
     {file = "pytz-2019.1.tar.gz", hash = "sha256:d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"},
 ]
 pyupgrade = [
-    {file = "pyupgrade-2.7.4-py2.py3-none-any.whl", hash = "sha256:ab2f47377e977bec8dd41db634fde35bce78fedd2be0e8b189fe687f23fb1d85"},
-    {file = "pyupgrade-2.7.4.tar.gz", hash = "sha256:e57057ccef3fd8e8fad5ba9f365c1288a076271a222ccb502d865c0d8fe16c3a"},
+    {file = "pyupgrade-2.11.0-py2.py3-none-any.whl", hash = "sha256:47cd92db1675a9043bebbe0b67a103b66527883b35e22634060a6bcb99138baa"},
+    {file = "pyupgrade-2.11.0.tar.gz", hash = "sha256:5dcae14b1c9b7ecce5ec42210528eb30a1a2408613da744f2ba4a9b54b344cf6"},
 ]
 regex = [
     {file = "regex-2020.11.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:8b882a78c320478b12ff024e81dc7d43c1462aa4a3341c754ee65d857a521f85"},
