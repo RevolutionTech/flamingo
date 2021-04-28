@@ -14,7 +14,7 @@ jobs:
       - uses: softprops/turnstyle@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: squalrus/merge-bot@v0.4.4
+      - uses: squalrus/merge-bot@v0.4.5
         with:
           GITHUB_TOKEN: ${{ secrets.AUTOMERGE_GITHUB_TOKEN }}
           reviewers: false
