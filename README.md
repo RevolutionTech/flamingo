@@ -2,7 +2,7 @@
 #### A photo contest web application
 
 ![CI](https://github.com/RevolutionTech/flamingo/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/RevolutionTech/flamingo/branch/master/graph/badge.svg)](https://codecov.io/gh/RevolutionTech/flamingo)
+[![codecov](https://codecov.io/gh/RevolutionTech/flamingo/branch/main/graph/badge.svg)](https://codecov.io/gh/RevolutionTech/flamingo)
 
 ## Setup
 
