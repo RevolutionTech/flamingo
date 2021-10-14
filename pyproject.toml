@@ -14,7 +14,7 @@ python-memcached = "^1.59"
 sorl-thumbnail = "^12.7.0"
 whitenoise = "^5.3.0"
 django-s3-storage = "^0.13.4"
-python-dotenv = "^0.19.0"
+python-dotenv = "^0.19.1"
 django-configurations = { version = "^2.2", extras = ["database"] }
 
 [tool.poetry.dev-dependencies]
